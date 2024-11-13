@@ -14,7 +14,7 @@ const SummaryDisplay = ({ summary }: SummaryProps) => {
       <Grid container spacing={2} justifyContent="space-around">
         <Grid>
           <Typography variant="h2">
-            {countFormatter.format(summary.volume)}
+            ${countFormatter.format(summary.volume)}
           </Typography>
           <Typography variant="subtitle1">Total Volume</Typography>
         </Grid>

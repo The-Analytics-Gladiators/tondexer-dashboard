@@ -34,16 +34,26 @@ const ComposedBarLineChart = ({ data }: ComposedBarLineChartProps) => {
         <YAxis yAxisId="right" orientation="right" />
         <Legend />
         <Bar
-          name="Volume of transactions"
+          name="Stonfi Volume"
+          stackId="a"
           yAxisId="left"
-          dataKey="volume"
+          dataKey="stonfi_volume"
           display="volumeFormatted"
           barSize={20}
           fill="#413ea0"
         ></Bar>
+        <Bar
+          name="Dedust Volume"
+          stackId="a"
+          yAxisId="left"
+          dataKey="dedust_volume"
+          display="volumeFormatted"
+          barSize={20}
+          fill="#cc9900"
+        ></Bar>
         <Tooltip
           formatter={(value: number, name: string) => {
-            return name === 'Volume of transactions'
+            return name.endsWith('Volume')
               ? [moneyFormatter.format(value), name]
               : [countFormatter.format(value), name];
           }}
