@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid2';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Props as BarComponentProps } from 'recharts/types/cartesian/Bar';
+import { Props as LineComponentProps } from 'recharts/types/cartesian/Line';
+import ToggleButton from '@mui/material/ToggleButton';
 import ComposedBarLineChart from '../../components/Charts/ComposedBarLine';
 import {
   DATA_PERIOD,
@@ -13,7 +16,6 @@ import {
   fetchVolumeHistory,
 } from '../../api';
 import { SummaryDto, Swap, UserStatsDto, VolumeHistory } from '../../api/types';
-import ToggleButton from '@mui/material/ToggleButton';
 import ChartCustomContainer from '../../components/ChartContainer';
 import SwapsTable from '../../components/SwapsTable';
 import SummaryDisplay from '../../components/Summary';
@@ -47,6 +49,38 @@ const MainPage = () => {
   const [selectedDataPeriod, setSelectedDataPeriod] = useState<DATA_PERIOD>(
     DATA_PERIOD.DAY
   );
+
+  const composedChartLinesConfig: LineComponentProps[] = [
+    {
+      name: 'Number of transactions',
+      dataKey: 'number',
+      fill: '#ff7300',
+      stroke: '#ff7300',
+      yAxisId: 'right',
+      type: 'monotone',
+    },
+  ];
+
+  const composedChartBarsConfig: BarComponentProps[] = [
+    {
+      name: 'Stonfi Volume',
+      dataKey: 'stonfiVolume',
+      fill: '#413ea0',
+      yAxisId: 'left',
+      stackId: 'a',
+      display: 'volumeFormatted',
+      barSize: 20,
+    },
+    {
+      name: 'Dedust Volume',
+      dataKey: 'dedustVolume',
+      fill: '#cc9900',
+      yAxisId: 'left',
+      stackId: 'a',
+      display: 'volumeFormatted',
+      barSize: 20,
+    },
+  ];
 
   useEffect(() => {
     setIsVolumeHistoryLoading(true);
@@ -123,7 +157,12 @@ const MainPage = () => {
           sx={{ minHeight: '350px' }}
           isLoading={isVolumeHistoryLoading}
         >
-          <ComposedBarLineChart data={volumeHistory} />
+          <ComposedBarLineChart
+            data={volumeHistory}
+            bars={composedChartBarsConfig}
+            lines={composedChartLinesConfig}
+            xAxisDataKey="name"
+          />
         </ChartCustomContainer>
         <ChartCustomContainer
           sx={{ minHeight: '350px' }}

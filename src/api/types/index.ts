@@ -7,7 +7,8 @@ export type VolumeHistoryDto = {
 
 export type VolumeHistory = {
   period: string;
-  stonfi_volume: number;
+  stonfiVolume: number;
+  dedustVolume: number;
   number: number;
   name: string;
 };

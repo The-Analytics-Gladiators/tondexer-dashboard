@@ -9,8 +9,8 @@ export const transformVolumeHistoryDtoToVolumeHistory = (
   const formatTemplate = getFormatTemplate(dataperiod);
   return dto.map((item) => ({
     period: item.period,
-    stonfi_volume: item.stonfi_volume,
-    dedust_volume: item.dedust_volume,
+    stonfiVolume: item.stonfi_volume,
+    dedustVolume: item.dedust_volume,
     number: item.number,
     name: dayjs(item.period).format(formatTemplate),
   }));
