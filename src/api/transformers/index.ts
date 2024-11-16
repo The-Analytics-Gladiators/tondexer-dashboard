@@ -1,5 +1,12 @@
 import dayjs from 'dayjs';
-import { Swap, SwapDto, VolumeHistory, VolumeHistoryDto } from '../types';
+import {
+  ArbitrageVolumeHistory,
+  ArbitrageVolumeHistoryDto,
+  Swap,
+  SwapDto,
+  VolumeHistory,
+  VolumeHistoryDto,
+} from '../types';
 import { DATA_PERIOD } from '../index.ts';
 
 export const transformVolumeHistoryDtoToVolumeHistory = (
@@ -11,6 +18,20 @@ export const transformVolumeHistoryDtoToVolumeHistory = (
     period: item.period,
     stonfiVolume: item.stonfi_volume,
     dedustVolume: item.dedust_volume,
+    number: item.number,
+    name: dayjs(item.period).format(formatTemplate),
+  }));
+};
+
+export const transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory = (
+  dto: ArbitrageVolumeHistoryDto[],
+  dataperiod: DATA_PERIOD
+): ArbitrageVolumeHistory[] => {
+  const formatTemplate = getFormatTemplate(dataperiod);
+  return dto.map((item) => ({
+    period: item.period,
+    usdProfit: item.usd_profit,
+    usdVolume: item.usd_profit,
     number: item.number,
     name: dayjs(item.period).format(formatTemplate),
   }));

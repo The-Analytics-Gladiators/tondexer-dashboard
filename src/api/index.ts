@@ -1,6 +1,13 @@
 import axios from 'axios';
-import { SummaryDto, SwapDto, UserStatsDto, VolumeHistoryDto } from './types';
 import {
+  ArbitrageVolumeHistoryDto,
+  SummaryDto,
+  SwapDto,
+  UserStatsDto,
+  VolumeHistoryDto,
+} from './types';
+import {
+  transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory,
   transformSwapDtoToSwap,
   transformVolumeHistoryDtoToVolumeHistory,
 } from './transformers';
@@ -44,6 +51,15 @@ export const fetchTopReferrers = (period: DATA_PERIOD) =>
   tondexerApiClient.get<UserStatsDto[]>(`/referrers/top`, {
     params: { period, limit: 5 },
   });
+
+export const fetchArbitrageVolumeHistory = (period: DATA_PERIOD) =>
+  tondexerApiClient
+    .get<
+      ArbitrageVolumeHistoryDto[]
+    >(`/arbitrages/volumeHistory`, { params: { period } })
+    .then(({ data }) =>
+      transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory(data, period)
+    );
 
 export const fetchTopSwaps = (period: DATA_PERIOD) =>
   tondexerApiClient.get(`/swaps/top`, { params: { period } });

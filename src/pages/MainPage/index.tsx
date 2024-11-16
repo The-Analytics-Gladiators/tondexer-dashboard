@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid2';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -50,37 +50,43 @@ const MainPage = () => {
     DATA_PERIOD.DAY
   );
 
-  const composedChartLinesConfig: LineComponentProps[] = [
-    {
-      name: 'Number of transactions',
-      dataKey: 'number',
-      fill: '#ff7300',
-      stroke: '#ff7300',
-      yAxisId: 'right',
-      type: 'monotone',
-    },
-  ];
+  const composedChartLinesConfig: LineComponentProps[] = useMemo(
+    () => [
+      {
+        name: 'Number of transactions',
+        dataKey: 'number',
+        fill: '#ff7300',
+        stroke: '#ff7300',
+        yAxisId: 'right',
+        type: 'monotone',
+      },
+    ],
+    []
+  );
 
-  const composedChartBarsConfig: BarComponentProps[] = [
-    {
-      name: 'Stonfi Volume',
-      dataKey: 'stonfiVolume',
-      fill: '#413ea0',
-      yAxisId: 'left',
-      stackId: 'a',
-      display: 'volumeFormatted',
-      barSize: 20,
-    },
-    {
-      name: 'Dedust Volume',
-      dataKey: 'dedustVolume',
-      fill: '#cc9900',
-      yAxisId: 'left',
-      stackId: 'a',
-      display: 'volumeFormatted',
-      barSize: 20,
-    },
-  ];
+  const composedChartBarsConfig: BarComponentProps[] = useMemo(
+    () => [
+      {
+        name: 'Stonfi Volume',
+        dataKey: 'stonfiVolume',
+        fill: '#413ea0',
+        yAxisId: 'left',
+        stackId: 'a',
+        display: 'volumeFormatted',
+        barSize: 20,
+      },
+      {
+        name: 'Dedust Volume',
+        dataKey: 'dedustVolume',
+        fill: '#cc9900',
+        yAxisId: 'left',
+        stackId: 'a',
+        display: 'volumeFormatted',
+        barSize: 20,
+      },
+    ],
+    []
+  );
 
   useEffect(() => {
     setIsVolumeHistoryLoading(true);

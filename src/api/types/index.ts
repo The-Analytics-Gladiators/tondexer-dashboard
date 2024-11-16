@@ -76,3 +76,18 @@ export type UserStatsDto = {
   tokens: number;
   count: number;
 };
+
+export type ArbitrageVolumeHistoryDto = {
+  period: string;
+  usd_profit: number;
+  usd_volume: number;
+  number: number;
+};
+
+export type ArbitrageVolumeHistory = {
+  period: string;
+  usdProfit: number;
+  usdVolume: number;
+  number: number;
+  name: string;
+};

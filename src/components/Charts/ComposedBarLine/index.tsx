@@ -7,18 +7,57 @@ import {
   Legend,
   Bar,
   ResponsiveContainer,
+  TooltipProps,
 } from 'recharts';
 import { Props as BarComponentProps } from 'recharts/types/cartesian/Bar';
 import { Props as LineComponentProps } from 'recharts/types/cartesian/Line';
-
-import { VolumeHistory } from '../../../api/types';
-import { countFormatter, moneyFormatter } from '../utils.ts';
+import { VolumeHistory, ArbitrageVolumeHistory } from '../../../api/types';
+import { countFormatter, isMoneyField, moneyFormatter } from '../utils.ts';
+import Typography from '@mui/material/Typography';
+import { Divider } from '@mui/material';
 
 type ComposedBarLineChartProps = {
-  data: VolumeHistory[];
+  data: VolumeHistory[] | ArbitrageVolumeHistory[];
   bars: BarComponentProps[];
   lines: LineComponentProps[];
   xAxisDataKey: string;
+};
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: TooltipProps<string, never>) => {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          borderRadius: '25px',
+          padding: '10px',
+          color: 'white',
+        }}
+      >
+        <Typography variant="subtitle1">{`${label}`}</Typography>
+        <Divider />
+        {payload.map((payloadItem) => {
+          // @ts-expect-error mismatched chart types from the library
+          const value = isMoneyField(payloadItem.dataKey)
+            ? // @ts-expect-error mismatched chart types from the library
+              moneyFormatter.format(payloadItem.value)
+            : // @ts-expect-error mismatched chart types from the library
+              countFormatter.format(payloadItem.value);
+          return (
+            <Typography variant="subtitle2" key={payloadItem.dataKey}>
+              {`${payloadItem.name} : ${value}`}
+            </Typography>
+          );
+        })}
+      </div>
+    );
+  }
+
+  return null;
 };
 
 const ComposedBarLineChart = ({
@@ -55,14 +94,7 @@ const ComposedBarLineChart = ({
         <Legend />
         {...renderedBars}
         {...renderedLines}
-        <Tooltip
-          formatter={(value: number, name: string) => {
-            // TODO: shit but ok for now
-            return name.endsWith('Volume')
-              ? [moneyFormatter.format(value), name]
-              : [countFormatter.format(value), name];
-          }}
-        />
+        <Tooltip content={CustomTooltip} />
       </ComposedChart>
     </ResponsiveContainer>
   );
