@@ -9,6 +9,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ComposedBarLineChart from '../../components/Charts/ComposedBarLine';
 import {
   DATA_PERIOD,
+  DEX_MARKET,
   fetchLatestSwaps,
   fetchSummary,
   fetchTopProfiters,
@@ -20,6 +21,7 @@ import ChartCustomContainer from '../../components/ChartContainer';
 import SwapsTable from '../../components/SwapsTable';
 import SummaryDisplay from '../../components/Summary';
 import UserStatsTable from '../../components/UserStatsTable';
+import { Link } from 'react-router-dom';
 
 const MainPage = () => {
   const [volumeHistory, setVolumeHistory] = useState<VolumeHistory[]>([]);
@@ -49,6 +51,8 @@ const MainPage = () => {
   const [selectedDataPeriod, setSelectedDataPeriod] = useState<DATA_PERIOD>(
     DATA_PERIOD.DAY
   );
+
+  const [selectedDex, setSelectedDex] = useState<DEX_MARKET>(DEX_MARKET.ALL);
 
   const composedChartLinesConfig: LineComponentProps[] = useMemo(
     () => [
@@ -95,27 +99,27 @@ const MainPage = () => {
     setIsTopProfitersLoading(true);
     setIsTopReferrersLoading(true);
 
-    fetchVolumeHistory(selectedDataPeriod).then((data) => {
+    fetchVolumeHistory(selectedDataPeriod, selectedDex).then((data) => {
       setVolumeHistory(data);
       setIsVolumeHistoryLoading(false);
     });
-    fetchLatestSwaps(selectedDataPeriod).then((data) => {
+    fetchLatestSwaps(selectedDataPeriod, selectedDex).then((data) => {
       setSwapsLatest(data);
       setIsSwapsLatestLoading(false);
     });
-    fetchSummary(selectedDataPeriod).then((data) => {
+    fetchSummary(selectedDataPeriod, selectedDex).then((data) => {
       setSummary(data);
       setIsSummaryLoading(false);
     });
-    fetchTopProfiters(selectedDataPeriod).then(({ data }) => {
+    fetchTopProfiters(selectedDataPeriod, selectedDex).then(({ data }) => {
       setTopProfiters(data);
       setIsTopProfitersLoading(false);
     });
-    fetchTopReferrers(selectedDataPeriod).then(({ data }) => {
+    fetchTopReferrers(selectedDataPeriod, selectedDex).then(({ data }) => {
       setTopReferrers(data);
       setIsTopReferrersLoading(false);
     });
-  }, [selectedDataPeriod]);
+  }, [selectedDataPeriod, selectedDex]);
 
   return (
     <Box sx={{ p: 5, width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
@@ -127,20 +131,41 @@ const MainPage = () => {
           marginBottom: 5,
         }}
       >
-        <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-          Market Overview
-        </Typography>
-        <ToggleButtonGroup
-          color="primary"
-          value={selectedDataPeriod}
-          exclusive
-          onChange={(_, value: DATA_PERIOD) => setSelectedDataPeriod(value)}
-          aria-label="Platform"
-        >
-          <ToggleButton value={DATA_PERIOD.DAY}>Day</ToggleButton>
-          <ToggleButton value={DATA_PERIOD.WEEK}>Week</ToggleButton>
-          <ToggleButton value={DATA_PERIOD.MONTH}>Month</ToggleButton>
-        </ToggleButtonGroup>
+        <Grid container direction="row">
+          <Typography component="h2" variant="h6" sx={{ mb: 2, mr: 2 }}>
+            Market Overview
+          </Typography>
+          <Link to="/arb">
+            <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+              Arbitrages Overview
+            </Typography>
+          </Link>
+        </Grid>
+        <Grid container direction="row">
+          <ToggleButtonGroup
+            color="primary"
+            value={selectedDataPeriod}
+            exclusive
+            sx={{ marginRight: 2 }}
+            onChange={(_, value: DATA_PERIOD) => setSelectedDataPeriod(value)}
+            aria-label="Period"
+          >
+            <ToggleButton value={DATA_PERIOD.DAY}>Day</ToggleButton>
+            <ToggleButton value={DATA_PERIOD.WEEK}>Week</ToggleButton>
+            <ToggleButton value={DATA_PERIOD.MONTH}>Month</ToggleButton>
+          </ToggleButtonGroup>
+          <ToggleButtonGroup
+            color="primary"
+            value={selectedDex}
+            exclusive
+            onChange={(_, value: DEX_MARKET) => setSelectedDex(value)}
+            aria-label="Platform"
+          >
+            <ToggleButton value={DEX_MARKET.ALL}>All Dex</ToggleButton>
+            <ToggleButton value={DEX_MARKET.STONFI}>STON.fi</ToggleButton>
+            <ToggleButton value={DEX_MARKET.DEDUST}>DeDust</ToggleButton>
+          </ToggleButtonGroup>
+        </Grid>
       </Grid>
       <Grid
         container

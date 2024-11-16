@@ -6,16 +6,27 @@ import Typography from '@mui/material/Typography';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Box from '@mui/material/Box';
-import { DATA_PERIOD, fetchArbitrageVolumeHistory } from '../../api';
-import { ArbitrageVolumeHistory } from '../../api/types';
+import {
+  DATA_PERIOD,
+  fetchArbitrageVolumeHistory,
+  fetchLatestArbitrages,
+} from '../../api';
+import { ArbitrageDetails, ArbitrageVolumeHistory } from '../../api/types';
 import ComposedBarLineChart from '../../components/Charts/ComposedBarLine';
 import ChartCustomContainer from '../../components/ChartContainer';
+import ArbitragesTable from '../../components/ArbitragesTable';
+import { Link } from 'react-router-dom';
 
 const ArbitragePage = () => {
   const [selectedDataPeriod, setSelectedDataPeriod] = useState<DATA_PERIOD>(
     DATA_PERIOD.DAY
   );
 
+  const [latestArbitrages, setLatestArbitrages] = useState<ArbitrageDetails[]>(
+    []
+  );
+  const [isLatestArbitragesLoading, setIsLatestArbitragesLoading] =
+    useState<boolean>(true);
   const [arbVolumeHistory, setArbVolumeHistory] = useState<
     ArbitrageVolumeHistory[]
   >([]);
@@ -52,6 +63,7 @@ const ArbitragePage = () => {
 
   useEffect(() => {
     setIsArbVolumeHistoryLoading(true);
+    setIsLatestArbitragesLoading(true);
     fetchArbitrageVolumeHistory(selectedDataPeriod)
       .then((data) => {
         setArbVolumeHistory(data);
@@ -59,6 +71,14 @@ const ArbitragePage = () => {
       })
       .catch(() => {
         setIsArbVolumeHistoryLoading(false);
+      });
+    fetchLatestArbitrages(selectedDataPeriod)
+      .then((data) => {
+        setLatestArbitrages(data);
+        setIsLatestArbitragesLoading(false);
+      })
+      .catch(() => {
+        setIsLatestArbitragesLoading(false);
       });
   }, [selectedDataPeriod]);
 
@@ -72,9 +92,17 @@ const ArbitragePage = () => {
           marginBottom: 5,
         }}
       >
-        <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-          Arbitrages Overview
-        </Typography>
+        <Grid container direction="row">
+          <Link to="/">
+            <Typography component="h2" variant="h6" sx={{ mb: 2, mr: 2 }}>
+              Market Overview
+            </Typography>
+          </Link>
+          <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+            Arbitrages Overview
+          </Typography>
+        </Grid>
+
         <ToggleButtonGroup
           color="primary"
           value={selectedDataPeriod}
@@ -107,6 +135,9 @@ const ArbitragePage = () => {
             lines={composedChartLinesConfig}
             xAxisDataKey="name"
           />
+        </ChartCustomContainer>
+        <ChartCustomContainer isLoading={isLatestArbitragesLoading}>
+          <ArbitragesTable data={latestArbitrages} />
         </ChartCustomContainer>
       </Grid>
     </Box>

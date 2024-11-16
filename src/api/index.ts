@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {
+  ArbitrageDetailsDto,
   ArbitrageVolumeHistoryDto,
   SummaryDto,
   SwapDto,
@@ -7,6 +8,7 @@ import {
   VolumeHistoryDto,
 } from './types';
 import {
+  transformArbitrageDetailsDtoToArbitrageDetails,
   transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory,
   transformSwapDtoToSwap,
   transformVolumeHistoryDtoToVolumeHistory,
@@ -20,6 +22,12 @@ export enum DATA_PERIOD {
   MONTH = 'month',
 }
 
+export enum DEX_MARKET {
+  ALL = 'all',
+  STONFI = 'stonfi',
+  DEDUST = 'dedust',
+}
+
 const tondexerApiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -27,29 +35,29 @@ const tondexerApiClient = axios.create({
   },
 });
 
-export const fetchSummary = (period: DATA_PERIOD) =>
+export const fetchSummary = (period: DATA_PERIOD, dex: DEX_MARKET) =>
   tondexerApiClient
-    .get<SummaryDto>(`/summary`, { params: { period } })
+    .get<SummaryDto>(`/summary`, { params: { period, dex } })
     .then(({ data }) => data);
 
-export const fetchVolumeHistory = (period: DATA_PERIOD) =>
+export const fetchVolumeHistory = (period: DATA_PERIOD, dex: DEX_MARKET) =>
   tondexerApiClient
-    .get<VolumeHistoryDto[]>(`/volumeHistory`, { params: { period } })
+    .get<VolumeHistoryDto[]>(`/volumeHistory`, { params: { period, dex } })
     .then(({ data }) => transformVolumeHistoryDtoToVolumeHistory(data, period));
 
-export const fetchLatestSwaps = (period: DATA_PERIOD) =>
+export const fetchLatestSwaps = (period: DATA_PERIOD, dex: DEX_MARKET) =>
   tondexerApiClient
-    .get<SwapDto[]>(`/swaps/latest`, { params: { period, limit: 5 } })
+    .get<SwapDto[]>(`/swaps/latest`, { params: { period, dex, limit: 5 } })
     .then(({ data }) => transformSwapDtoToSwap(data));
 
-export const fetchTopProfiters = (period: DATA_PERIOD) =>
+export const fetchTopProfiters = (period: DATA_PERIOD, dex: DEX_MARKET) =>
   tondexerApiClient.get<UserStatsDto[]>(`/profiters/top`, {
-    params: { period, limit: 5 },
+    params: { period, dex, limit: 5 },
   });
 
-export const fetchTopReferrers = (period: DATA_PERIOD) =>
+export const fetchTopReferrers = (period: DATA_PERIOD, dex: DEX_MARKET) =>
   tondexerApiClient.get<UserStatsDto[]>(`/referrers/top`, {
-    params: { period, limit: 5 },
+    params: { period, dex, limit: 5 },
   });
 
 export const fetchArbitrageVolumeHistory = (period: DATA_PERIOD) =>
@@ -60,6 +68,20 @@ export const fetchArbitrageVolumeHistory = (period: DATA_PERIOD) =>
     .then(({ data }) =>
       transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory(data, period)
     );
+
+export const fetchLatestArbitrages = (period: DATA_PERIOD) => {
+  return tondexerApiClient
+    .get<
+      ArbitrageDetailsDto[]
+    >(`/arbitrages/latest`, { params: { period, limit: 5 } })
+    .then(({ data }) => transformArbitrageDetailsDtoToArbitrageDetails(data));
+};
+
+export const fetchLatestArbitrageSwaps = (period: DATA_PERIOD) => {
+  return tondexerApiClient.get(`/arbitrages/latest`, {
+    params: { period, limit: 5 },
+  });
+};
 
 export const fetchTopSwaps = (period: DATA_PERIOD) =>
   tondexerApiClient.get(`/swaps/top`, { params: { period } });

@@ -14,25 +14,25 @@ const SummaryDisplay = ({ summary }: SummaryProps) => {
       <Grid container spacing={2} justifyContent="space-around">
         <Grid>
           <Typography variant="h2">
-            ${countFormatter.format(summary.volume)}
+            ${countFormatter().format(summary.volume)}
           </Typography>
           <Typography variant="subtitle1">Total Volume</Typography>
         </Grid>
         <Grid>
           <Typography variant="h2">
-            {countFormatter.format(summary.number)}
+            {countFormatter().format(summary.number)}
           </Typography>
           <Typography variant="subtitle1">Total Transactions Number</Typography>
         </Grid>
         <Grid>
           <Typography variant="h2">
-            {countFormatter.format(summary.unique_tokens)}
+            {countFormatter().format(summary.unique_tokens)}
           </Typography>
           <Typography variant="subtitle1">Unique Tokens</Typography>
         </Grid>
         <Grid>
           <Typography variant="h2">
-            {countFormatter.format(summary.unique_users)}
+            {countFormatter().format(summary.unique_users)}
           </Typography>
           <Typography variant="subtitle1">Unique Users</Typography>
         </Grid>

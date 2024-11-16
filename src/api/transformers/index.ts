@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 import {
+  ArbitrageDetails,
+  ArbitrageDetailsDto,
   ArbitrageVolumeHistory,
   ArbitrageVolumeHistoryDto,
   Swap,
@@ -8,6 +10,7 @@ import {
   VolumeHistoryDto,
 } from '../types';
 import { DATA_PERIOD } from '../index.ts';
+import { countFormatter } from '../../components/Charts/utils.ts';
 
 export const transformVolumeHistoryDtoToVolumeHistory = (
   dto: VolumeHistoryDto[],
@@ -74,3 +77,46 @@ const getFormatTemplate = (dataperiod: DATA_PERIOD) => {
       return 'MMM DD, HH:mm';
   }
 };
+
+export const transformArbitrageDetailsDtoToArbitrageDetails = (
+  dtos: ArbitrageDetailsDto[]
+): ArbitrageDetails[] =>
+  dtos.map((dto) => {
+    const jettonArbitrage = dto.amounts_jettons.map(
+      (amount, index) =>
+        `${countFormatter(dto.jettons_decimals[index]).format(amount)} ${dto.jetton_symbols[index]}`
+    );
+
+    return {
+      time: dto.time,
+      sender: dto.sender,
+      traces: dto.traces,
+      amountIn: dto.amount_in,
+      amountInJettons: dto.amount_in_jettons,
+      amountOut: dto.amount_out,
+      amountOutJettons: dto.amount_out_jettons,
+      amountInUsd: dto.amount_in_usd,
+      amountOutUsd: dto.amount_out_usd,
+      jetton: dto.jetton,
+      jettonSymbol: dto.jetton_symbol,
+      jettonName: dto.jetton_name,
+      jettonUsdRate: dto.jetton_usd_rate,
+      jettonDecimals: dto.jetton_decimals,
+      amountsPath: dto.amounts_path,
+      jettonsPath: dto.jettons_path,
+      jettonNames: dto.jetton_names,
+      jettonSymbols: dto.jetton_symbols,
+      jettonUsdRates: dto.jetton_usd_rates,
+      jettonsDecimals: dto.jettons_decimals,
+      amountsJettons: dto.amounts_jettons,
+      amountsUsdPath: dto.amounts_usd_path,
+      poolsPath: dto.pools_path,
+      dexes: dto.dexes,
+      usdProfit: dto.amount_out_usd - dto.amount_in_usd,
+      jettonArbitrage,
+      shortUserHash:
+        dto.sender.length <= 8
+          ? dto.sender
+          : `${dto.sender.slice(0, 4)}...${dto.sender.slice(-4)}`,
+    };
+  });

@@ -46,7 +46,7 @@ const CustomTooltip = ({
             ? // @ts-expect-error mismatched chart types from the library
               moneyFormatter.format(payloadItem.value)
             : // @ts-expect-error mismatched chart types from the library
-              countFormatter.format(payloadItem.value);
+              countFormatter().format(payloadItem.value);
           return (
             <Typography variant="subtitle2" key={payloadItem.dataKey}>
               {`${payloadItem.name} : ${value}`}
