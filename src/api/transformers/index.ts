@@ -6,6 +6,8 @@ import {
   ArbitrageVolumeHistoryDto,
   Swap,
   SwapDto,
+  SwapsDistribution,
+  SwapsDistributionDto,
   VolumeHistory,
   VolumeHistoryDto,
 } from '../types';
@@ -120,3 +122,18 @@ export const transformArbitrageDetailsDtoToArbitrageDetails = (
           : `${dto.sender.slice(0, 4)}...${dto.sender.slice(-4)}`,
     };
   });
+
+export const transformSwapsDistributionDtoToSwapsDistribution = (
+  dto: SwapsDistributionDto
+): SwapsDistribution  => {
+  return {
+    usdRangeTo1: dto.usd_1,
+    usdRange1To5: dto.usd_1_5,
+    usdRange5To15: dto.usd_5_15,
+    usdRange15To50: dto.usd_15_50,
+    usdRange50To150: dto.usd_50_150,
+    usdRange150To500: dto.usd_150_500,
+    usdRange500To2000: dto.usd_500_2000,
+    usdRangeFrom2000: dto.usd_2000,
+  }
+}

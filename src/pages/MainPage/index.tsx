@@ -12,16 +12,17 @@ import {
   DEX_MARKET,
   fetchLatestSwaps,
   fetchSummary,
-  fetchTopProfiters,
+  fetchSwapsDistribution,
   fetchTopReferrers,
   fetchVolumeHistory,
 } from '../../api';
-import { SummaryDto, Swap, UserStatsDto, VolumeHistory } from '../../api/types';
+import { emptySwapsDistribution, SummaryDto, Swap, SwapsDistribution, UserStatsDto, VolumeHistory } from '../../api/types';
 import ChartCustomContainer from '../../components/ChartContainer';
 import SwapsTable from '../../components/SwapsTable';
 import SummaryDisplay from '../../components/Summary';
 import UserStatsTable from '../../components/UserStatsTable';
 import { Link } from 'react-router-dom';
+import { SwapDistributionBarEntry, swapsDistributionToDataArray } from '../../api/swaps';
 
 const MainPage = () => {
   const [volumeHistory, setVolumeHistory] = useState<VolumeHistory[]>([]);
@@ -40,8 +41,8 @@ const MainPage = () => {
   });
   const [isSummaryLoading, setIsSummaryLoading] = useState<boolean>(true);
 
-  const [topProfiters, setTopProfiters] = useState<UserStatsDto[]>([]);
-  const [isTopProfitersLoading, setIsTopProfitersLoading] =
+  const [swapsDistribution, setSwapsDistribution] = useState<SwapsDistribution>(emptySwapsDistribution)
+  const [isSwapsDistributionLoading, setIsSwapsDististributionLoading] = 
     useState<boolean>(true);
 
   const [topReferrers, setTopReferrers] = useState<UserStatsDto[]>([]);
@@ -92,11 +93,22 @@ const MainPage = () => {
     []
   );
 
+  const swapsDistributionChartBarConfig: BarComponentProps[] = useMemo(
+    () => [
+      {
+        dataKey: 'transactions',
+        fill: '#413ea0',
+        yAxisId: 'left',
+        display: 'volumeFormatted',
+      }
+    ], []
+  )
+
   useEffect(() => {
     setIsVolumeHistoryLoading(true);
     setIsSwapsLatestLoading(true);
     setIsSummaryLoading(true);
-    setIsTopProfitersLoading(true);
+    setIsSwapsDististributionLoading(true);
     setIsTopReferrersLoading(true);
 
     fetchVolumeHistory(selectedDataPeriod, selectedDex).then((data) => {
@@ -111,10 +123,10 @@ const MainPage = () => {
       setSummary(data);
       setIsSummaryLoading(false);
     });
-    fetchTopProfiters(selectedDataPeriod, selectedDex).then(({ data }) => {
-      setTopProfiters(data);
-      setIsTopProfitersLoading(false);
-    });
+    fetchSwapsDistribution(selectedDataPeriod, selectedDex).then((data) => {
+      setSwapsDistribution(data);
+      setIsSwapsDististributionLoading(false);
+    })
     fetchTopReferrers(selectedDataPeriod, selectedDex).then(({ data }) => {
       setTopReferrers(data);
       setIsTopReferrersLoading(false);
@@ -188,11 +200,12 @@ const MainPage = () => {
           sx={{ minHeight: '350px' }}
           isLoading={isVolumeHistoryLoading}
         >
-          <ComposedBarLineChart
+          <ComposedBarLineChart<VolumeHistory>
             data={volumeHistory}
             bars={composedChartBarsConfig}
             lines={composedChartLinesConfig}
             xAxisDataKey="name"
+            legend
           />
         </ChartCustomContainer>
         <ChartCustomContainer
@@ -201,8 +214,16 @@ const MainPage = () => {
         >
           <SwapsTable data={swapsLatest} />
         </ChartCustomContainer>
-        <ChartCustomContainer isLoading={isTopProfitersLoading}>
-          <UserStatsTable data={topProfiters} />
+        <ChartCustomContainer 
+          sx={{ minHeight: '350px' }}
+          isLoading={isSwapsDistributionLoading}>
+          <ComposedBarLineChart<SwapDistributionBarEntry>
+            data={swapsDistributionToDataArray(swapsDistribution)}
+            bars={swapsDistributionChartBarConfig}
+            lines={[]}
+            xAxisDataKey="label"
+            legend={false}
+          />
         </ChartCustomContainer>
         <ChartCustomContainer isLoading={isTopReferrersLoading}>
           <UserStatsTable data={topReferrers} />

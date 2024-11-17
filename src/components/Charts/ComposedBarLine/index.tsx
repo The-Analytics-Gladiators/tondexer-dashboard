@@ -11,16 +11,16 @@ import {
 } from 'recharts';
 import { Props as BarComponentProps } from 'recharts/types/cartesian/Bar';
 import { Props as LineComponentProps } from 'recharts/types/cartesian/Line';
-import { VolumeHistory, ArbitrageVolumeHistory } from '../../../api/types';
 import { countFormatter, isMoneyField, moneyFormatter } from '../utils.ts';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
 
-type ComposedBarLineChartProps = {
-  data: VolumeHistory[] | ArbitrageVolumeHistory[];
+type ComposedBarLineChartProps<T> = {
+  data: T[];
   bars: BarComponentProps[];
   lines: LineComponentProps[];
   xAxisDataKey: string;
+  legend: boolean;
 };
 
 const CustomTooltip = ({
@@ -60,12 +60,13 @@ const CustomTooltip = ({
   return null;
 };
 
-const ComposedBarLineChart = ({
+const ComposedBarLineChart = <T,>({
   data,
   bars,
   lines,
   xAxisDataKey,
-}: ComposedBarLineChartProps) => {
+  legend,
+}: ComposedBarLineChartProps<T>) => {
   const renderedBars = bars.map((bar) => {
     // @ts-expect-error mismatched chart types from the library
     return <Bar key={`bar_${bar.dataKey}`} {...bar} />;
@@ -88,10 +89,10 @@ const ComposedBarLineChart = ({
           left: 20,
         }}
       >
-        <XAxis dataKey={xAxisDataKey} scale="band" fontSize={10} />
+        <XAxis dataKey={xAxisDataKey} fontSize={10} />
         <YAxis yAxisId="left" />
         <YAxis yAxisId="right" orientation="right" />
-        <Legend />
+        {(legend) && <Legend />}
         {...renderedBars}
         {...renderedLines}
         <Tooltip content={CustomTooltip} />

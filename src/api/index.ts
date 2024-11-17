@@ -4,6 +4,7 @@ import {
   ArbitrageVolumeHistoryDto,
   SummaryDto,
   SwapDto,
+  SwapsDistributionDto,
   UserStatsDto,
   VolumeHistoryDto,
 } from './types';
@@ -11,6 +12,7 @@ import {
   transformArbitrageDetailsDtoToArbitrageDetails,
   transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory,
   transformSwapDtoToSwap,
+  transformSwapsDistributionDtoToSwapsDistribution,
   transformVolumeHistoryDtoToVolumeHistory,
 } from './transformers';
 
@@ -68,6 +70,11 @@ export const fetchArbitrageVolumeHistory = (period: DATA_PERIOD) =>
     .then(({ data }) =>
       transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory(data, period)
     );
+
+export const fetchSwapsDistribution = (period: DATA_PERIOD, dex: DEX_MARKET) =>
+  tondexerApiClient.get<SwapsDistributionDto>(`/swaps/distribution`, 
+    { params: { period, dex } })
+    .then(( { data }) => transformSwapsDistributionDtoToSwapsDistribution(data));
 
 export const fetchLatestArbitrages = (period: DATA_PERIOD) => {
   return tondexerApiClient

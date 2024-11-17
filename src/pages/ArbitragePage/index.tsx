@@ -129,11 +129,12 @@ const ArbitragePage = () => {
           sx={{ minHeight: '350px' }}
           isLoading={isArbVolumeHistoryLoading}
         >
-          <ComposedBarLineChart
+          <ComposedBarLineChart<ArbitrageVolumeHistory>
             data={arbVolumeHistory}
             bars={composedChartBarsConfig}
             lines={composedChartLinesConfig}
             xAxisDataKey="name"
+            legend={true}
           />
         </ChartCustomContainer>
         <ChartCustomContainer isLoading={isLatestArbitragesLoading}>

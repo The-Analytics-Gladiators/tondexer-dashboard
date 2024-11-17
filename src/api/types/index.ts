@@ -148,3 +148,36 @@ export type ArbitrageDetails = {
   usdProfit: number;
   shortUserHash: string;
 };
+
+export type SwapsDistributionDto = {
+  usd_1: number;
+  usd_1_5: number;
+  usd_5_15: number;
+  usd_15_50: number;
+  usd_50_150: number;
+  usd_150_500: number;
+  usd_500_2000: number;
+  usd_2000: number;
+}
+
+export type SwapsDistribution = {
+  usdRangeTo1: number;
+  usdRange1To5: number;
+  usdRange5To15: number;
+  usdRange15To50: number;
+  usdRange50To150: number;
+  usdRange150To500: number;
+  usdRange500To2000: number;
+  usdRangeFrom2000: number;
+}
+
+export const emptySwapsDistribution = {
+  usdRangeTo1: 0,
+  usdRange1To5: 0,
+  usdRange5To15: 0,
+  usdRange15To50: 0,
+  usdRange50To150: 0,
+  usdRange150To500: 0,
+  usdRange500To2000: 0,
+  usdRangeFrom2000: 0,
+}
