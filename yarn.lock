@@ -84,6 +84,11 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
+"@coingecko/cryptoformat@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@coingecko/cryptoformat/-/cryptoformat-0.8.2.tgz#ad74773ae2e202e95d95a141aa4b8ae86e33feb3"
+  integrity sha512-DW7KlphL88zbuHYloIv2jhU67kfnRpfkZZzUJjAijeyUiUkrQUu24QeGDkKEoEI/rt1cBZMyZxwh9Btpg/Wgrw==
+
 "@emotion/babel-plugin@^11.12.0":
   version "11.12.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.12.0.tgz#7b43debb250c313101b3f885eba634f1d723fcc2"

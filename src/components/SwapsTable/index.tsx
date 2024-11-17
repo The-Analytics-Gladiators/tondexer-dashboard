@@ -8,7 +8,11 @@ import { Chip } from '@mui/material';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Swap } from '../../api/types';
-import { moneyFormatter } from '../Charts/utils.ts';
+import { countFormatter, moneyFormatter } from '../Charts/utils.ts';
+import DexIcon from '../DexIcon';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 
 dayjs.extend(relativeTime);
 
@@ -30,16 +34,54 @@ const SwapsTable = ({ data }: SwapsTableProps) => {
                 {dayjs(swap.time).fromNow()}
               </TableCell>
               <TableCell align="center" sx={{ p: 0 }}>
-                <Chip label={swap.dex} size="small" />
+                <DexIcon
+                  altText={swap.dex}
+                  sizePx={24}
+                  dex={swap.dex}
+                  key={`dexicon-${swap.dex}`}
+                ></DexIcon>
               </TableCell>
               <TableCell align="center" sx={{ p: 0 }}>
-                <Chip
-                  label={swap.jettonInSymbol}
-                  size="small"
-                  variant="outlined"
-                />
-                {'>'}
-                <Chip label={swap.jettonOutSymbol} size="small" />
+                <Breadcrumbs separator="->">
+                  <Tooltip
+                    title={`${swap.jettonInName}: ${countFormatter(8).format(swap.amountIn)}`}
+                  >
+                    <Chip
+                      key={`${swap.time}-${swap.jettonInName}`}
+                      label={
+                        <>
+                          <Typography fontSize={12}>
+                            {swap.jettonInSymbol}
+                          </Typography>
+                          <Typography fontSize={10}>
+                            {countFormatter(4).format(swap.amountIn)}
+                          </Typography>
+                        </>
+                      }
+                      size="medium"
+                      variant="outlined"
+                    />
+                  </Tooltip>
+                  <Tooltip
+                    title={`${swap.jettonOutName}: ${countFormatter(8).format(swap.amountOut)}`}
+                  >
+                    <Chip
+                      key={`${swap.time}-${swap.jettonOutName}`}
+                      label={
+                        <>
+                          <Typography fontSize={12}>
+                            {swap.jettonOutSymbol}
+                          </Typography>
+                          <Typography fontSize={10}>
+                            {countFormatter(4).format(swap.amountOut)}
+                          </Typography>
+                        </>
+                      }
+                      size="medium"
+                      variant="outlined"
+                    />
+                  </Tooltip>
+                </Breadcrumbs>
               </TableCell>
               <TableCell align="center" sx={{ p: 0 }}>
                 <Chip

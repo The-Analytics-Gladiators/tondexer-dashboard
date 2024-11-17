@@ -84,7 +84,7 @@ export const transformArbitrageDetailsDtoToArbitrageDetails = (
   dtos.map((dto) => {
     const jettonArbitrage = dto.amounts_jettons.map(
       (amount, index) =>
-        `${countFormatter(dto.jettons_decimals[index]).format(amount)} ${dto.jetton_symbols[index]}`
+        `${countFormatter(4).format(amount)} ${dto.jetton_symbols[index]}`
     );
 
     return {
