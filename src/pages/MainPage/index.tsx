@@ -13,16 +13,21 @@ import {
   fetchLatestSwaps,
   fetchSummary,
   fetchSwapsDistribution,
+  fetchTopJettons,
+  fetchTopPools,
   fetchTopReferrers,
   fetchVolumeHistory,
+  fetchTopUsers,
 } from '../../api';
-import { emptySwapsDistribution, SummaryDto, Swap, SwapsDistribution, UserStatsDto, VolumeHistory } from '../../api/types';
+import { emptySwapsDistribution, SummaryDto, Swap, SwapsDistribution, TopJetton, TopPool, TopUser, UserStatsDto, VolumeHistory } from '../../api/types';
 import ChartCustomContainer from '../../components/ChartContainer';
 import SwapsTable from '../../components/SwapsTable';
 import SummaryDisplay from '../../components/Summary';
 import UserStatsTable from '../../components/UserStatsTable';
 import { Link } from 'react-router-dom';
 import { SwapDistributionBarEntry, swapsDistributionToDataArray } from '../../api/swaps';
+import CustomTreemap from '../../components/Charts/Treemap';
+import { topJettonsToTreemapData, topPoolsToTreemapData, topUsersToTreemapData } from '../../components/Charts/Treemap/transformers';
 
 const MainPage = () => {
   const [volumeHistory, setVolumeHistory] = useState<VolumeHistory[]>([]);
@@ -48,6 +53,15 @@ const MainPage = () => {
   const [topReferrers, setTopReferrers] = useState<UserStatsDto[]>([]);
   const [isTopReferrersLoading, setIsTopReferrersLoading] =
     useState<boolean>(true);
+
+  const [topPools, setTopPools] = useState<TopPool[]>([]);
+  const [isTopPoolsLoading, setIsTopPoolsLoading] = useState<boolean>(true);
+
+  const [topJettons, setTopJettons] = useState<TopJetton[]>([]);
+  const [isTopJettonsLoading, setIsTopJettonsLoading] = useState<boolean>(true);
+
+  const [topUsers, setTopUsers] = useState<TopUser[]>([]);
+  const [isTopUsersLoading, setIsTopUsersLoading] = useState<boolean>(true);
 
   const [selectedDataPeriod, setSelectedDataPeriod] = useState<DATA_PERIOD>(
     DATA_PERIOD.DAY
@@ -110,6 +124,9 @@ const MainPage = () => {
     setIsSummaryLoading(true);
     setIsSwapsDististributionLoading(true);
     setIsTopReferrersLoading(true);
+    setIsTopPoolsLoading(true);
+    setIsTopJettonsLoading(true);
+    setIsTopUsersLoading(true);
 
     fetchVolumeHistory(selectedDataPeriod, selectedDex).then((data) => {
       setVolumeHistory(data);
@@ -130,6 +147,18 @@ const MainPage = () => {
     fetchTopReferrers(selectedDataPeriod, selectedDex).then(({ data }) => {
       setTopReferrers(data);
       setIsTopReferrersLoading(false);
+    });
+    fetchTopPools(selectedDataPeriod, selectedDex).then((data) => {
+      setTopPools(data)
+      setIsTopPoolsLoading(false);
+    });
+    fetchTopJettons(selectedDataPeriod, selectedDex).then((data) => {
+      setTopJettons(data)
+      setIsTopJettonsLoading(false);
+    });
+    fetchTopUsers(selectedDataPeriod, selectedDex).then((data) => {
+      setTopUsers(data);
+      setIsTopUsersLoading(false);
     });
   }, [selectedDataPeriod, selectedDex]);
 
@@ -227,6 +256,15 @@ const MainPage = () => {
         </ChartCustomContainer>
         <ChartCustomContainer isLoading={isTopReferrersLoading}>
           <UserStatsTable data={topReferrers} />
+        </ChartCustomContainer>
+        <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopPoolsLoading}>
+          <CustomTreemap data={topPoolsToTreemapData(topPools)}/>
+        </ChartCustomContainer>
+        <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopJettonsLoading}>
+          <CustomTreemap data={topJettonsToTreemapData(topJettons)}/>
+        </ChartCustomContainer>
+        <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopUsersLoading}>
+          <CustomTreemap data={topUsersToTreemapData(topUsers)}/>
         </ChartCustomContainer>
       </Grid>
     </Box>

@@ -8,6 +8,12 @@ import {
   SwapDto,
   SwapsDistribution,
   SwapsDistributionDto,
+  TopJetton,
+  TopJettonDto,
+  TopPool,
+  TopPoolDto,
+  TopUser,
+  TopUserDto,
   VolumeHistory,
   VolumeHistoryDto,
 } from '../types';
@@ -80,6 +86,13 @@ const getFormatTemplate = (dataperiod: DATA_PERIOD) => {
   }
 };
 
+const shortenHash = (hash: string) => {
+  return hash.length <= 8
+    ? hash
+    : `${hash.slice(0, 4)}...${hash.slice(-4)}`
+}
+
+
 export const transformArbitrageDetailsDtoToArbitrageDetails = (
   dtos: ArbitrageDetailsDto[]
 ): ArbitrageDetails[] =>
@@ -116,12 +129,10 @@ export const transformArbitrageDetailsDtoToArbitrageDetails = (
       dexes: dto.dexes,
       usdProfit: dto.amount_out_usd - dto.amount_in_usd,
       jettonArbitrage,
-      shortUserHash:
-        dto.sender.length <= 8
-          ? dto.sender
-          : `${dto.sender.slice(0, 4)}...${dto.sender.slice(-4)}`,
+      shortUserHash: shortenHash(dto.sender)
     };
   });
+
 
 export const transformSwapsDistributionDtoToSwapsDistribution = (
   dto: SwapsDistributionDto
@@ -137,3 +148,38 @@ export const transformSwapsDistributionDtoToSwapsDistribution = (
     usdRangeFrom2000: dto.usd_2000,
   }
 }
+
+export const transformTopPoolDtoToTopPools = (
+  dtos: TopPoolDto[]
+): TopPool[] => 
+  dtos.map((dto) => {
+    return {
+      poolAddress: dto.pool_address,
+      jettonInSymbol: dto.jetton_in_symbol,
+      jettonOutSymbol: dto.jetton_out_symbol,
+      amountUsd: dto.amount_usd,
+      dex: dto.dex,
+    }
+  })
+
+export const transformTopJettonDtoToTopJettons = (
+  dtos: TopJettonDto[]
+): TopJetton[] => 
+  dtos.map((dto) => {
+    return {
+      jettonAddress: dto.jetton_address,
+      jettonSymbol: dto.jetton_symbol,
+      jettonUsd: dto.jetton_usd,
+    }
+  })
+
+export const transformTopUserDtoToTopUsers = (
+  dtos: TopUserDto[]
+): TopUser[] => 
+  dtos.map((dto) => {
+    return {
+      userAddress: dto.user_address,
+      shortUserAddress: shortenHash(dto.user_address),
+      amountUsd: dto.amount_usd
+    }
+  })

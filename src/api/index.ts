@@ -5,6 +5,8 @@ import {
   SummaryDto,
   SwapDto,
   SwapsDistributionDto,
+  TopJettonDto,
+  TopPoolDto,
   UserStatsDto,
   VolumeHistoryDto,
 } from './types';
@@ -13,6 +15,9 @@ import {
   transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory,
   transformSwapDtoToSwap,
   transformSwapsDistributionDtoToSwapsDistribution,
+  transformTopJettonDtoToTopJettons,
+  transformTopPoolDtoToTopPools,
+  transformTopUserDtoToTopUsers,
   transformVolumeHistoryDtoToVolumeHistory,
 } from './transformers';
 
@@ -93,11 +98,18 @@ export const fetchLatestArbitrageSwaps = (period: DATA_PERIOD) => {
 export const fetchTopSwaps = (period: DATA_PERIOD) =>
   tondexerApiClient.get(`/swaps/top`, { params: { period } });
 
-export const fetchTopPools = (period: DATA_PERIOD) =>
-  tondexerApiClient.get(`/pools/top`, { params: { period } });
+export const fetchTopPools = (period: DATA_PERIOD, dex: DEX_MARKET) =>
+  tondexerApiClient.get<TopPoolDto[]>(`/pools/top`, 
+    { params: { period, dex } })
+    .then(({ data }) => transformTopPoolDtoToTopPools(data));
 
-export const fetchTopJettons = (period: DATA_PERIOD) =>
-  tondexerApiClient.get(`/jettons/top`, { params: { period } });
 
-export const fetchTopUsers = (period: DATA_PERIOD) =>
-  tondexerApiClient.get(`/users/top`, { params: { period } });
+export const fetchTopJettons = (period: DATA_PERIOD, dex: DEX_MARKET) =>
+  tondexerApiClient.get<TopJettonDto[]>(`/jettons/top`, 
+    { params: { period, dex } })
+    .then(({ data }) => transformTopJettonDtoToTopJettons(data));
+
+export const fetchTopUsers = (period: DATA_PERIOD, dex: DEX_MARKET) =>
+  tondexerApiClient.get(`/users/top`, 
+    { params: { period, dex } })
+    .then(({ data }) => transformTopUserDtoToTopUsers(data));

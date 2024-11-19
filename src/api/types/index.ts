@@ -181,3 +181,42 @@ export const emptySwapsDistribution = {
   usdRange500To2000: 0,
   usdRangeFrom2000: 0,
 }
+
+export type TopPoolDto = {
+  pool_address: string,
+  jetton_in_symbol: string,
+  jetton_out_symbol: string,
+  amount_usd: number,
+  dex: string,
+}
+
+export type TopPool = {
+  poolAddress: string,
+  jettonInSymbol: string,
+  jettonOutSymbol: string,
+  amountUsd: number,
+  dex: string,
+}
+
+export type TopJettonDto = {
+  jetton_address: string,
+  jetton_symbol: string,
+  jetton_usd: number,
+}
+
+export type TopJetton = {
+  jettonAddress: string,
+  jettonSymbol: string,
+  jettonUsd: number,
+}
+
+export type TopUserDto = {
+  user_address: string,
+  amount_usd: number,
+}
+
+export type TopUser = {
+  userAddress: string,
+  shortUserAddress: string,
+  amountUsd: number,
+}
