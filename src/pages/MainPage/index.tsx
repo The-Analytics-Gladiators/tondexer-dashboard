@@ -226,7 +226,8 @@ const MainPage = () => {
           <SummaryDisplay summary={summary} />
         </ChartCustomContainer>
         <ChartCustomContainer
-          sx={{ minHeight: '350px' }}
+          sx={{ minHeight: '400px' }}
+          size={{ lg: 7 }}
           isLoading={isVolumeHistoryLoading}
         >
           <ComposedBarLineChart<VolumeHistory>
@@ -238,7 +239,8 @@ const MainPage = () => {
           />
         </ChartCustomContainer>
         <ChartCustomContainer
-          sx={{ minHeight: '350px' }}
+          sx={{ minHeight: '400px' }}
+          size={{ lg: 5 }}
           isLoading={isSwapsLatestLoading}
         >
           <SwapsTable data={swapsLatest} />

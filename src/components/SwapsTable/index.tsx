@@ -3,16 +3,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Chip } from '@mui/material';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Swap } from '../../api/types';
-import { countFormatter, moneyFormatter } from '../Charts/utils.ts';
+import { formatJettonAmount, moneyFormatter } from '../Charts/utils.ts';
 import DexIcon from '../DexIcon';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
+import { shortenHash } from '../../api/transformers/index.ts';
+import ExternalLink from '../ExternalLink/index.tsx';
 
 dayjs.extend(relativeTime);
 
@@ -32,72 +33,57 @@ const SwapsTable = ({ data }: SwapsTableProps) => {
             >
               <TableCell align="center" sx={{ p: 0 }}>
                 {dayjs(swap.time).fromNow()}
+                <ExternalLink url={`https://tonviewer.com/transaction/${swap.hashes[0]}`} />
               </TableCell>
-              <TableCell align="center" sx={{ p: 0 }}>
+              <TableCell align="center" sx={{ display: 'flex', justifyContent: 'center' }}>
                 <DexIcon
                   altText={swap.dex}
                   sizePx={24}
                   dex={swap.dex}
                   key={`dexicon-${swap.dex}`}
+                  url={`https://tonviewer.com/${swap.poolAddress}`}
                 ></DexIcon>
               </TableCell>
               <TableCell align="center" sx={{ p: 0 }}>
-                <Breadcrumbs separator="->">
+                <Breadcrumbs separator="->" sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Tooltip
-                    title={`${swap.jettonInName}: ${countFormatter(8).format(swap.amountIn)}`}
+                    title={`~${moneyFormatter.format(swap.inUsd)}`}
                   >
                     <Chip
                       key={`${swap.time}-${swap.jettonInName}`}
                       label={
                         <>
                           <Typography fontSize={12}>
-                            {swap.jettonInSymbol}
-                          </Typography>
-                          <Typography fontSize={10}>
-                            {countFormatter(4).format(swap.amountIn)}
+                            {swap.jettonInSymbol} {formatJettonAmount(swap.amountIn, swap.jettonInDecimals)}
                           </Typography>
                         </>
                       }
-                      size="medium"
                       variant="outlined"
                     />
                   </Tooltip>
                   <Tooltip
-                    title={`${swap.jettonOutName}: ${countFormatter(8).format(swap.amountOut)}`}
+                    title={`~${moneyFormatter.format(swap.outUsd)}`}
                   >
                     <Chip
                       key={`${swap.time}-${swap.jettonOutName}`}
                       label={
                         <>
                           <Typography fontSize={12}>
-                            {swap.jettonOutSymbol}
-                          </Typography>
-                          <Typography fontSize={10}>
-                            {countFormatter(4).format(swap.amountOut)}
+                            {swap.jettonOutSymbol} {formatJettonAmount(swap.amountOut, swap.jettonOutDecimals)}
                           </Typography>
                         </>
                       }
-                      size="medium"
                       variant="outlined"
                     />
                   </Tooltip>
                 </Breadcrumbs>
-              </TableCell>
-              <TableCell align="center" sx={{ p: 0 }}>
-                <Chip
-                  label={moneyFormatter.format(swap.inUsd)}
-                  size="small"
-                  variant="outlined"
-                />
-                {'>'}
-                <Chip label={moneyFormatter.format(swap.outUsd)} size="small" />
               </TableCell>
               <TableCell align="center">
                 <a
                   target="_blank"
                   href={`https://tonviewer.com/${swap.sender}`}
                 >
-                  <AccountCircleIcon />
+                  {shortenHash(swap.sender)}
                 </a>
               </TableCell>
             </TableRow>

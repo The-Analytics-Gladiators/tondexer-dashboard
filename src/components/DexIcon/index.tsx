@@ -7,6 +7,7 @@ type DexIconProps = {
   dex: string;
   altText: string;
   sizePx: number;
+  url?: string;
 };
 
 const pickIcon = (dex: string) => {
@@ -21,15 +22,20 @@ const pickIcon = (dex: string) => {
   }
 };
 
-const DexIcon: React.FC<DexIconProps> = ({ dex, altText, sizePx = 24 }) => {
+const DexIcon: React.FC<DexIconProps> = ({ dex, altText, sizePx = 24, url }) => {
   const icon = pickIcon(dex);
-  return (
-    <Tooltip title={dex}>
-      <img
+
+  const imgElem = <img
         src={icon}
         alt={altText}
         style={{ width: `${sizePx}px`, height: `${sizePx}px` }}
       />
+
+  const img: JSX.Element = (url) ? <a href={url} target="_blank">{imgElem}</a> : imgElem
+
+  return (
+    <Tooltip title={dex}>
+      {img} 
     </Tooltip>
   );
 };

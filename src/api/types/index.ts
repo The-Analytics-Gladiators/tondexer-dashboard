@@ -43,6 +43,7 @@ export type SwapDto = {
   ReferralAddress: string;
   ReferralAmount: number;
   ReferralUsd: number;
+  PoolAddress: string;
 };
 
 export type Swap = {
@@ -68,6 +69,7 @@ export type Swap = {
   referralAddress: string;
   referralAmount: number;
   referralUsd: number;
+  poolAddress: string;
 };
 
 export type UserStatsDto = {

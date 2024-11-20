@@ -72,6 +72,7 @@ export const transformSwapDtoToSwap = (dto: SwapDto[]): Swap[] => {
     referralAddress: item.ReferralAddress,
     referralAmount: item.ReferralAmount,
     referralUsd: item.ReferralUsd,
+    poolAddress: item.PoolAddress,
   }));
 };
 
@@ -86,7 +87,7 @@ const getFormatTemplate = (dataperiod: DATA_PERIOD) => {
   }
 };
 
-const shortenHash = (hash: string) => {
+export const shortenHash = (hash: string) => {
   return hash.length <= 8
     ? hash
     : `${hash.slice(0, 4)}...${hash.slice(-4)}`

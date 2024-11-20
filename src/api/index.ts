@@ -54,7 +54,7 @@ export const fetchVolumeHistory = (period: DATA_PERIOD, dex: DEX_MARKET) =>
 
 export const fetchLatestSwaps = (period: DATA_PERIOD, dex: DEX_MARKET) =>
   tondexerApiClient
-    .get<SwapDto[]>(`/swaps/latest`, { params: { period, dex, limit: 5 } })
+    .get<SwapDto[]>(`/swaps/latest`, { params: { period, dex, limit: 20 } })
     .then(({ data }) => transformSwapDtoToSwap(data));
 
 export const fetchTopProfiters = (period: DATA_PERIOD, dex: DEX_MARKET) =>
