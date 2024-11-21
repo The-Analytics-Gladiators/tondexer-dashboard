@@ -222,3 +222,54 @@ export type TopUser = {
   shortUserAddress: string,
   amountUsd: number,
 }
+
+export type ArbitragesDistributionDto = {
+  usd_1: number;
+  usd_5_20: number;
+  usd_20_50: number;
+  usd_50_200: number;
+  usd_200_500: number;
+  usd_500_1000: number;
+  usd_1000_5000: number;
+  usd_5000: number;
+}
+
+export type ArbitragesDistribution = {
+  usdRangeTo5: number;
+  usdRange5To20: number;
+  usdRange20To50: number;
+  usdRange50To200: number;
+  usdRange200To500: number;
+  usdRange500To1000: number;
+  usdRange1000To5000: number;
+  usdRangeFrom5000: number;
+}
+
+export const emptyArbitragesDistibution: ArbitragesDistribution = {
+  usdRangeTo5: 0,
+  usdRange5To20: 0,
+  usdRange20To50: 0,
+  usdRange50To200: 0,
+  usdRange200To500: 0,
+  usdRange500To1000: 0,
+  usdRange1000To5000: 0,
+  usdRangeFrom5000: 0,
+}
+
+export type ArbitrageJettonDto = {
+  jetton: string;
+  jetton_symbol: string;
+  jetton_name: string;
+  jetton_decimals: number;
+  profit_usd: number;
+  number: number;
+}
+
+export type ArbitrageJetton = {
+  jetton: string;
+  jettonSymbol: string;
+  jettonName: string;
+  jettonDecimals: number;
+  profitUsd: number;
+  number: number;
+}

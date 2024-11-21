@@ -11,7 +11,7 @@ export const countFormatter = (fractionDigits = 0) =>
     maximumFractionDigits: fractionDigits,
   });
 
-const MONEY_FIELDS = new Set(['usdProfit', 'usdVolume', 'inUsd', 'outUsd', 'stonfiVolume', 'dedustVolume']);
+const MONEY_FIELDS = new Set(['usdProfit', 'usdVolume', 'inUsd', 'outUsd', 'stonfiVolume', 'dedustVolume', 'profitUsd']);
 
 export const isMoneyField = (fieldName: string): boolean => {
   return MONEY_FIELDS.has(fieldName);
@@ -20,7 +20,7 @@ export const isMoneyField = (fieldName: string): boolean => {
 export const formatJettonAmount = (amount: number, decimals: number) => {
   const jettonAmount = amount / Math.pow(10, decimals)
 
-  const factionDigits = Math.max(0, 4 - Math.log10(Math.abs(jettonAmount)))
+  const factionDigits = (jettonAmount === 0) ? 0 : Math.max(0, 4 - Math.log10(Math.abs(jettonAmount)))
 
   const formatted = countFormatter(factionDigits).format(jettonAmount)
   if (jettonAmount > 100) {

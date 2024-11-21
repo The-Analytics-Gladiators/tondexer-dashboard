@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {
   ArbitrageDetailsDto,
+  ArbitrageJettonDto,
+  ArbitragesDistributionDto,
   ArbitrageVolumeHistoryDto,
   SummaryDto,
   SwapDto,
@@ -12,6 +14,8 @@ import {
 } from './types';
 import {
   transformArbitrageDetailsDtoToArbitrageDetails,
+  transformArbitrageJettonDtosToArbitrageJettons,
+  transformArbitragesDistributionDtoToAtrbitragesDistribution,
   transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory,
   transformSwapDtoToSwap,
   transformSwapsDistributionDtoToSwapsDistribution,
@@ -85,9 +89,29 @@ export const fetchLatestArbitrages = (period: DATA_PERIOD) => {
   return tondexerApiClient
     .get<
       ArbitrageDetailsDto[]
-    >(`/arbitrages/latest`, { params: { period, limit: 5 } })
+    >(`/arbitrages/latest`, { params: { period, limit: 15 } })
     .then(({ data }) => transformArbitrageDetailsDtoToArbitrageDetails(data));
 };
+
+export const fetchTopArbitrages = (period: DATA_PERIOD) => {
+  return tondexerApiClient
+    .get<
+      ArbitrageDetailsDto[]
+    >(`/arbitrages/top`, { params: { period } })
+    .then(({ data }) => transformArbitrageDetailsDtoToArbitrageDetails(data));
+};
+
+export const fetchArbitragesDistribution = (period: DATA_PERIOD) => {
+  return tondexerApiClient.get<ArbitragesDistributionDto>(
+    `/arbitrages/distribution`, { params: { period } })
+    .then(({ data }) => transformArbitragesDistributionDtoToAtrbitragesDistribution(data))
+}
+
+export const fetchTopArbitrageJettons = (period: DATA_PERIOD) => {
+  return tondexerApiClient.get<ArbitrageJettonDto[]>(
+  `/arbitrages/jettons/top`, { params: { period } })
+  .then(({ data }) => transformArbitrageJettonDtosToArbitrageJettons(data))
+}
 
 export const fetchLatestArbitrageSwaps = (period: DATA_PERIOD) => {
   return tondexerApiClient.get(`/arbitrages/latest`, {

@@ -2,6 +2,10 @@ import dayjs from 'dayjs';
 import {
   ArbitrageDetails,
   ArbitrageDetailsDto,
+  ArbitrageJetton,
+  ArbitrageJettonDto,
+  ArbitragesDistribution,
+  ArbitragesDistributionDto,
   ArbitrageVolumeHistory,
   ArbitrageVolumeHistoryDto,
   Swap,
@@ -182,5 +186,34 @@ export const transformTopUserDtoToTopUsers = (
       userAddress: dto.user_address,
       shortUserAddress: shortenHash(dto.user_address),
       amountUsd: dto.amount_usd
+    }
+  })
+
+export const transformArbitragesDistributionDtoToAtrbitragesDistribution = (
+  dto: ArbitragesDistributionDto
+): ArbitragesDistribution  => {
+  return {
+    usdRangeTo5: dto.usd_1,
+    usdRange5To20: dto.usd_5_20,
+    usdRange20To50: dto.usd_20_50,
+    usdRange50To200: dto.usd_50_200,
+    usdRange200To500: dto.usd_200_500,
+    usdRange500To1000: dto.usd_500_1000,
+    usdRange1000To5000: dto.usd_1000_5000,
+    usdRangeFrom5000: dto.usd_5000,
+  }
+}
+
+export const transformArbitrageJettonDtosToArbitrageJettons = (
+  dtos: ArbitrageJettonDto[]
+): ArbitrageJetton[] =>
+  dtos.map((dto) => {
+    return {
+      jetton: dto.jetton,
+      jettonSymbol: dto.jetton_symbol,
+      jettonName: dto.jetton_name,
+      jettonDecimals: dto.jetton_decimals,
+      profitUsd: dto.profit_usd,
+      number: dto.number,
     }
   })
