@@ -3,6 +3,7 @@ import { SwapDistributionBarEntry, arbitragesDistributionToDataArray } from '../
 import Grid from '@mui/material/Grid2';
 import { Props as BarComponentProps } from 'recharts/types/cartesian/Bar';
 import { Props as LineComponentProps } from 'recharts/types/cartesian/Line';
+import UserStatsTable from '../../components/UserStatsTable';
 import Typography from '@mui/material/Typography';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -14,8 +15,9 @@ import {
   fetchLatestArbitrages,
   fetchTopArbitrageJettons,
   fetchTopArbitrages,
+  fetchTopArbitrageUsers,
 } from '../../api';
-import { ArbitrageDetails, ArbitrageJetton, ArbitragesDistribution, ArbitrageVolumeHistory, emptyArbitragesDistibution } from '../../api/types';
+import { ArbitrageDetails, ArbitrageJetton, ArbitragesDistribution, ArbitrageVolumeHistory, emptyArbitragesDistibution, UserStatsDto } from '../../api/types';
 import ComposedBarLineChart from '../../components/Charts/ComposedBarLine';
 import ChartCustomContainer from '../../components/ChartContainer';
 import ArbitragesTable from '../../components/ArbitragesTable';
@@ -41,6 +43,9 @@ const ArbitragePage = () => {
   const [topArbitrages, setTopArbitrages] = useState<ArbitrageDetails[]>([])
 
   const [arbitrageJettons, setArbitrageJettons] = useState<ArbitrageJetton[]>([]);
+
+  const [isTopArbitrageUsersLoading, setIsTopArbitrageUsersLoading] = useState<boolean>(true);
+  const [topArbitrageUsers, setTopArbitrageUsers] = useState<UserStatsDto[]>([]);
 
   const [arbitragesDistribution, setArbitragesDistribution] = useState<ArbitragesDistribution>(emptyArbitragesDistibution);
   const arbitragesDistributionChartBarConfig: BarComponentProps[] = useMemo(
@@ -114,7 +119,7 @@ const ArbitragePage = () => {
     setIsArbVolumeHistoryLoading(true);
     setIsLatestArbitragesLoading(true);
     setIsTopArbitragesLoading(true);
-    // setIsArbitragesDistributionLoading(true);
+    setIsTopArbitragesLoading(true);
     fetchArbitrageVolumeHistory(selectedDataPeriod)
       .then((data) => {
         setArbVolumeHistory(data);
@@ -143,6 +148,11 @@ const ArbitragePage = () => {
     fetchTopArbitrageJettons(selectedDataPeriod)
       .then((data) => {
         setArbitrageJettons(data);
+      })
+    fetchTopArbitrageUsers(selectedDataPeriod)
+      .then((data) => {
+        setTopArbitrageUsers(data); 
+        setIsTopArbitrageUsersLoading(false);
       })
   }, [selectedDataPeriod]);
 
@@ -212,7 +222,7 @@ const ArbitragePage = () => {
         </ChartCustomContainer>
         <ChartCustomContainer 
           sx={{ minHeight: '300px' }}
-          size={{ lg: 3 }}
+          size={{ lg: 6 }}
           isLoading={false}
         >
           <ComposedBarLineChart<SwapDistributionBarEntry>
@@ -225,7 +235,7 @@ const ArbitragePage = () => {
         </ChartCustomContainer>
         <ChartCustomContainer
           sx={{ minHeight: '400px' }}
-          size={{ lg: 3 }}
+          size={{ lg: 6 }}
           isLoading={false}
         >
           <ComposedBarLineChart<ArbitrageJetton>
@@ -235,6 +245,12 @@ const ArbitragePage = () => {
             xAxisDataKey="jettonSymbol"
             legend
           />
+        </ChartCustomContainer>
+        <ChartCustomContainer 
+          size={{ lg: 6 }}
+          isLoading={isTopArbitragesLoading}
+        >
+          <UserStatsTable data={topArbitrageUsers} />
         </ChartCustomContainer>
       </Grid>
     </Box>

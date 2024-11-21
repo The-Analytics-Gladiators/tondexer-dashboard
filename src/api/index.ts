@@ -19,6 +19,7 @@ import {
   transformArbitrageVolumeHistoryDtoToArbitrageVolumeHistory,
   transformSwapDtoToSwap,
   transformSwapsDistributionDtoToSwapsDistribution,
+  transformTopArbitrageUsersToUserStatsDtos,
   transformTopJettonDtoToTopJettons,
   transformTopPoolDtoToTopPools,
   transformTopUserDtoToTopUsers,
@@ -118,6 +119,12 @@ export const fetchLatestArbitrageSwaps = (period: DATA_PERIOD) => {
     params: { period, limit: 5 },
   });
 };
+
+export const fetchTopArbitrageUsers = (period: DATA_PERIOD) => {
+  return tondexerApiClient.get(`/arbitrages/users/top`, {
+    params: { period } })
+    .then(({ data }) => transformTopArbitrageUsersToUserStatsDtos(data));
+}
 
 export const fetchTopSwaps = (period: DATA_PERIOD, dex: DEX_MARKET) =>
   tondexerApiClient

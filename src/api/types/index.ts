@@ -273,3 +273,10 @@ export type ArbitrageJetton = {
   profitUsd: number;
   number: number;
 }
+
+export type TopArbitrageUser = {
+  sender: string;
+  profit_usd: number;
+  jettons: number;
+  number: number
+}

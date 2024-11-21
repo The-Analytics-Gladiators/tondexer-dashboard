@@ -12,6 +12,7 @@ import {
   SwapDto,
   SwapsDistribution,
   SwapsDistributionDto,
+  TopArbitrageUser as TopArbitrageUserDto,
   TopJetton,
   TopJettonDto,
   TopPool,
@@ -20,6 +21,7 @@ import {
   TopUserDto,
   VolumeHistory,
   VolumeHistoryDto,
+  UserStatsDto,
 } from '../types';
 import { DATA_PERIOD } from '../index.ts';
 import { countFormatter } from '../../components/Charts/utils.ts';
@@ -215,5 +217,16 @@ export const transformArbitrageJettonDtosToArbitrageJettons = (
       jettonDecimals: dto.jetton_decimals,
       profitUsd: dto.profit_usd,
       number: dto.number,
+    }
+  })
+
+export const transformTopArbitrageUsersToUserStatsDtos = (
+  dtos: TopArbitrageUserDto[]): UserStatsDto[] => 
+  dtos.map((dto) => {
+    return {
+      user_address: dto.sender,
+      amount_usd: dto.profit_usd,
+      tokens: dto.jettons,
+      count: dto.number,
     }
   })
