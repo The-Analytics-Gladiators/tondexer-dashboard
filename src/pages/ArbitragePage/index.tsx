@@ -248,7 +248,7 @@ const ArbitragePage = () => {
         </ChartCustomContainer>
         <ChartCustomContainer 
           size={{ lg: 6 }}
-          isLoading={isTopArbitragesLoading}
+          isLoading={isTopArbitrageUsersLoading}
         >
           <UserStatsTable data={topArbitrageUsers} />
         </ChartCustomContainer>
