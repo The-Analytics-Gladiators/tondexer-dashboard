@@ -18,6 +18,7 @@ import {
   fetchTopReferrers,
   fetchVolumeHistory,
   fetchTopUsers,
+  fetchTopSwaps,
 } from '../../api';
 import { emptySwapsDistribution, SummaryDto, Swap, SwapsDistribution, TopJetton, TopPool, TopUser, UserStatsDto, VolumeHistory } from '../../api/types';
 import ChartCustomContainer from '../../components/ChartContainer';
@@ -31,8 +32,6 @@ import { topJettonsToTreemapData, topPoolsToTreemapData, topUsersToTreemapData }
 
 const MainPage = () => {
   const [volumeHistory, setVolumeHistory] = useState<VolumeHistory[]>([]);
-  const [isVolumeHistoryLoading, setIsVolumeHistoryLoading] =
-    useState<boolean>(true);
 
   const [swapsLatest, setSwapsLatest] = useState<Swap[]>([]);
   const [isSwapsLatestLoading, setIsSwapsLatestLoading] =
@@ -46,9 +45,10 @@ const MainPage = () => {
   });
   const [isSummaryLoading, setIsSummaryLoading] = useState<boolean>(true);
 
+  const [isTopSwapsLoading, setIsTopSwapsLoading] = useState<boolean>(true);
+  const [topSwaps, setTopSwaps] = useState<Swap[]>([])
+
   const [swapsDistribution, setSwapsDistribution] = useState<SwapsDistribution>(emptySwapsDistribution)
-  const [isSwapsDistributionLoading, setIsSwapsDististributionLoading] = 
-    useState<boolean>(true);
 
   const [topReferrers, setTopReferrers] = useState<UserStatsDto[]>([]);
   const [isTopReferrersLoading, setIsTopReferrersLoading] =
@@ -119,10 +119,9 @@ const MainPage = () => {
   )
 
   useEffect(() => {
-    setIsVolumeHistoryLoading(true);
     setIsSwapsLatestLoading(true);
     setIsSummaryLoading(true);
-    setIsSwapsDististributionLoading(true);
+    setIsTopSwapsLoading(true);
     setIsTopReferrersLoading(true);
     setIsTopPoolsLoading(true);
     setIsTopJettonsLoading(true);
@@ -130,7 +129,6 @@ const MainPage = () => {
 
     fetchVolumeHistory(selectedDataPeriod, selectedDex).then((data) => {
       setVolumeHistory(data);
-      setIsVolumeHistoryLoading(false);
     });
     fetchLatestSwaps(selectedDataPeriod, selectedDex).then((data) => {
       setSwapsLatest(data);
@@ -140,9 +138,12 @@ const MainPage = () => {
       setSummary(data);
       setIsSummaryLoading(false);
     });
+    fetchTopSwaps(selectedDataPeriod, selectedDex).then((data) => {
+      setTopSwaps(data);
+      setIsTopSwapsLoading(false);
+    })
     fetchSwapsDistribution(selectedDataPeriod, selectedDex).then((data) => {
       setSwapsDistribution(data);
-      setIsSwapsDististributionLoading(false);
     })
     fetchTopReferrers(selectedDataPeriod, selectedDex).then(({ data }) => {
       setTopReferrers(data);
@@ -228,7 +229,7 @@ const MainPage = () => {
         <ChartCustomContainer
           sx={{ minHeight: '400px' }}
           size={{ lg: 7 }}
-          isLoading={isVolumeHistoryLoading}
+          isLoading={false}
         >
           <ComposedBarLineChart<VolumeHistory>
             data={volumeHistory}
@@ -239,15 +240,24 @@ const MainPage = () => {
           />
         </ChartCustomContainer>
         <ChartCustomContainer
-          sx={{ minHeight: '400px' }}
+          sx={{ minHeight: '300px' }}
           size={{ lg: 5 }}
           isLoading={isSwapsLatestLoading}
         >
           <SwapsTable data={swapsLatest} />
         </ChartCustomContainer>
         <ChartCustomContainer 
-          sx={{ minHeight: '350px' }}
-          isLoading={isSwapsDistributionLoading}>
+          isLoading={isTopSwapsLoading}
+          sx={{ minHeight: '300px' }}
+          size={{ lg: 5 }}
+          >
+          <SwapsTable data={topSwaps} />
+        </ChartCustomContainer>
+        <ChartCustomContainer 
+          sx={{ minHeight: '300px' }}
+          size={{ lg: 3 }}
+          isLoading={false}
+        >
           <ComposedBarLineChart<SwapDistributionBarEntry>
             data={swapsDistributionToDataArray(swapsDistribution)}
             bars={swapsDistributionChartBarConfig}
@@ -256,7 +266,10 @@ const MainPage = () => {
             legend={false}
           />
         </ChartCustomContainer>
-        <ChartCustomContainer isLoading={isTopReferrersLoading}>
+        <ChartCustomContainer 
+          size={{ lg: 4 }}
+          isLoading={isTopReferrersLoading}
+        >
           <UserStatsTable data={topReferrers} />
         </ChartCustomContainer>
         <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopPoolsLoading}>

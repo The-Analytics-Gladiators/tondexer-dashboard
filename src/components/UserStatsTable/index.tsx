@@ -3,10 +3,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Chip } from '@mui/material';
 import { moneyFormatter } from '../Charts/utils.ts';
 import { UserStatsDto } from '../../api/types';
+import { shortenHash } from '../../api/transformers/index.ts';
 
 type NewSwapsTableProps = {
   data: UserStatsDto[];
@@ -14,7 +14,7 @@ type NewSwapsTableProps = {
 
 const UserStatsTable = ({ data }: NewSwapsTableProps) => {
   return (
-    <TableContainer sx={{ maxHeight: 200, overflowY: 'auto' }}>
+    <TableContainer sx={{ maxHeight: 400, overflowY: 'auto' }}>
       <Table aria-label="simple table" stickyHeader>
         <TableBody>
           {data.map((swap: UserStatsDto, index) => (
@@ -22,14 +22,6 @@ const UserStatsTable = ({ data }: NewSwapsTableProps) => {
               key={`${swap.user_address}${index}`}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell align="center" sx={{ p: 0 }}>
-                <a
-                  target="_blank"
-                  href={`https://tonviewer.com/${swap.user_address}`}
-                >
-                  <AccountCircleIcon />
-                </a>
-              </TableCell>
               <TableCell align="center" sx={{ p: 0 }}>
                 <Chip
                   label={moneyFormatter.format(swap.amount_usd)}
@@ -45,6 +37,14 @@ const UserStatsTable = ({ data }: NewSwapsTableProps) => {
                   label={`${swap.count.toString()} transactions`}
                   size="small"
                 />
+              </TableCell>
+              <TableCell align="center" sx={{ p: 0 }}>
+                <a
+                  target="_blank"
+                  href={`https://tonviewer.com/${swap.user_address}`}
+                >
+                  {shortenHash(swap.user_address)}
+                </a>
               </TableCell>
             </TableRow>
           ))}

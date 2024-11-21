@@ -11,7 +11,7 @@ export const countFormatter = (fractionDigits = 0) =>
     maximumFractionDigits: fractionDigits,
   });
 
-const MONEY_FIELDS = new Set(['usdProfit', 'usdVolume', 'inUsd', 'outUsd']);
+const MONEY_FIELDS = new Set(['usdProfit', 'usdVolume', 'inUsd', 'outUsd', 'stonfiVolume', 'dedustVolume']);
 
 export const isMoneyField = (fieldName: string): boolean => {
   return MONEY_FIELDS.has(fieldName);

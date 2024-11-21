@@ -95,8 +95,10 @@ export const fetchLatestArbitrageSwaps = (period: DATA_PERIOD) => {
   });
 };
 
-export const fetchTopSwaps = (period: DATA_PERIOD) =>
-  tondexerApiClient.get(`/swaps/top`, { params: { period } });
+export const fetchTopSwaps = (period: DATA_PERIOD, dex: DEX_MARKET) =>
+  tondexerApiClient
+    .get<SwapDto[]>(`/swaps/top`, { params: { period, dex } })
+    .then(({ data }) => transformSwapDtoToSwap(data));
 
 export const fetchTopPools = (period: DATA_PERIOD, dex: DEX_MARKET) =>
   tondexerApiClient.get<TopPoolDto[]>(`/pools/top`, 
