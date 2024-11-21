@@ -120,6 +120,7 @@ const ArbitragePage = () => {
     setIsLatestArbitragesLoading(true);
     setIsTopArbitragesLoading(true);
     setIsTopArbitragesLoading(true);
+    setIsTopArbitrageUsersLoading(true);
     fetchArbitrageVolumeHistory(selectedDataPeriod)
       .then((data) => {
         setArbVolumeHistory(data);
