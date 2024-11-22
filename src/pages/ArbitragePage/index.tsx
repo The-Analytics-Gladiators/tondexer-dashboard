@@ -213,12 +213,14 @@ const ArbitragePage = () => {
           />
         </ChartCustomContainer>
         <ChartCustomContainer isLoading={isLatestArbitragesLoading}>
+          {/* Latest Arbitrage Opportunities */}
           <ArbitragesTable data={latestArbitrages} />
         </ChartCustomContainer>
         <ChartCustomContainer 
           isLoading={isTopArbitragesLoading}
           size={{ lg: 6 }}
         >
+          {/* Top Arbitrage Profits */}
           <ArbitragesTable data={topArbitrages} />
         </ChartCustomContainer>
         <ChartCustomContainer 
@@ -226,6 +228,8 @@ const ArbitragePage = () => {
           size={{ lg: 6 }}
           isLoading={false}
         >
+          {/* Profit Distribution for Arbitrage Trades */}
+          {/* A chart showing how arbitrage profits are distributed across different ranges, providing insights into the profitability of trades. */}
           <ComposedBarLineChart<SwapDistributionBarEntry>
             data={arbitragesDistributionToDataArray(arbitragesDistribution)}
             bars={arbitragesDistributionChartBarConfig}
@@ -239,6 +243,7 @@ const ArbitragePage = () => {
           size={{ lg: 6 }}
           isLoading={false}
         >
+          {/* Top Tokens for Arbitrage */}
           <ComposedBarLineChart<ArbitrageJetton>
             data={arbitrageJettons}
             bars={composedChartJettonsBarsConfig}
@@ -251,6 +256,7 @@ const ArbitragePage = () => {
           size={{ lg: 6 }}
           isLoading={isTopArbitrageUsersLoading}
         >
+          {/* Leading Arbitrage Traders */}
           <UserStatsTable data={topArbitrageUsers} />
         </ChartCustomContainer>
       </Grid>

@@ -244,6 +244,7 @@ const MainPage = () => {
           size={{ lg: 5 }}
           isLoading={isSwapsLatestLoading}
         >
+          {/* Latest Transactions */}
           <SwapsTable data={swapsLatest} />
         </ChartCustomContainer>
         <ChartCustomContainer 
@@ -251,6 +252,7 @@ const MainPage = () => {
           sx={{ minHeight: '300px' }}
           size={{ lg: 5 }}
           >
+          {/* Latest Transactions */}
           <SwapsTable data={topSwaps} />
         </ChartCustomContainer>
         <ChartCustomContainer 
@@ -258,6 +260,8 @@ const MainPage = () => {
           size={{ lg: 3 }}
           isLoading={false}
         >
+          {/* Transaction's Distribution */}
+          {/* A chart that displays how transaction volumes are distributed across different ranges, giving insight into the size of typical trades. */}
           <ComposedBarLineChart<SwapDistributionBarEntry>
             data={swapsDistributionToDataArray(swapsDistribution)}
             bars={swapsDistributionChartBarConfig}
@@ -270,15 +274,20 @@ const MainPage = () => {
           size={{ lg: 4 }}
           isLoading={isTopReferrersLoading}
         >
+          {/* Top Fee Earners */}
+          {/* Users or wallets that have earned the most in fees by referring or facilitating trades on the DEX */}
           <UserStatsTable data={topReferrers} />
         </ChartCustomContainer>
         <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopPoolsLoading}>
+          {/* Trending Liquidity Pools */}
           <CustomTreemap data={topPoolsToTreemapData(topPools)}/>
         </ChartCustomContainer>
+          {/* Trending Tokens */}
         <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopJettonsLoading}>
           <CustomTreemap data={topJettonsToTreemapData(topJettons)}/>
         </ChartCustomContainer>
         <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopUsersLoading}>
+          {/* Top Swappers by Volume */}
           <CustomTreemap data={topUsersToTreemapData(topUsers)}/>
         </ChartCustomContainer>
       </Grid>
