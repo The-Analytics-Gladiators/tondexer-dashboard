@@ -20,18 +20,21 @@ export const isMoneyField = (fieldName: string): boolean => {
 export const formatJettonAmount = (amount: number, decimals: number) => {
   const jettonAmount = amount / Math.pow(10, decimals)
 
-  const factionDigits = (jettonAmount === 0) ? 0 : Math.max(0, 4 - Math.log10(Math.abs(jettonAmount)))
+  const factionDigits = (jettonAmount === 0) ? 0 : Math.max(0, 5 - Math.log10(Math.abs(jettonAmount)))
 
   const formatted = countFormatter(factionDigits).format(jettonAmount)
-  if (jettonAmount > 100) {
-    return formatted.replace(/\.0+$/, '').replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') 
+
+  var preFinal: string
+  if (jettonAmount > 1000) {
+    preFinal = formatted.replace(/\.0+$/, '').replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') 
   } else {
     if (formatted.endsWith('00')) {
-      return formatted.substring(0, formatted.length - 2)
+      preFinal = formatted.substring(0, formatted.length - 2)
     } else if(formatted.endsWith('.00')) {
-      return formatted.substring(0, formatted.length - 3)
+      preFinal = formatted.substring(0, formatted.length - 3)
     } else {
-      return formatted
+      preFinal = formatted
     }
   }
+    return (preFinal.endsWith(".")) ? preFinal.substring(0, preFinal.length - 1) : preFinal;
 }
