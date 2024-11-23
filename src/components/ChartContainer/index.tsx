@@ -2,6 +2,7 @@ import Grid from '@mui/material/Grid2';
 import { ReactNode } from 'react';
 import { Skeleton, SxProps } from '@mui/material';
 import { Breakpoint } from '@mui/material/styles';
+import { TABLE_HEIGHT } from '../Charts/utils.ts';
 
 type ChartContainerProps = {
   isLoading: boolean;
@@ -23,6 +24,7 @@ const ChartCustomContainer = ({
         backgroundColor: '#242529',
         padding: '20px',
         borderRadius: '25px',
+        maxHeight: TABLE_HEIGHT + 100,
         ...sx,
       }}
     >

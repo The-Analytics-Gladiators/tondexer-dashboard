@@ -4,7 +4,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import { Chip } from '@mui/material';
-import { moneyFormatter } from '../Charts/utils.ts';
+import { moneyFormatter, TABLE_HEIGHT } from '../Charts/utils.ts';
 import { UserStatsDto } from '../../api/types';
 import { shortenHash } from '../../api/transformers/index.ts';
 
@@ -14,7 +14,7 @@ type NewSwapsTableProps = {
 
 const UserStatsTable = ({ data }: NewSwapsTableProps) => {
   return (
-    <TableContainer sx={{ maxHeight: 400, overflowY: 'auto' }}>
+    <TableContainer sx={{ maxHeight: TABLE_HEIGHT, overflowY: 'auto' }}>
       <Table aria-label="simple table" stickyHeader>
         <TableBody>
           {data.map((swap: UserStatsDto, index) => (

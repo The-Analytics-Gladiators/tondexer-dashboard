@@ -9,7 +9,11 @@ import dayjs from 'dayjs';
 import Typography from '@mui/material/Typography';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { ArbitrageDetails } from '../../api/types';
-import { formatJettonAmount, moneyFormatter } from '../Charts/utils.ts';
+import {
+  formatJettonAmount,
+  moneyFormatter,
+  TABLE_HEIGHT,
+} from '../Charts/utils.ts';
 import DexIcon from '../DexIcon';
 import Tooltip from '@mui/material/Tooltip';
 
@@ -21,7 +25,7 @@ type ArbitragesTableProps = {
 
 const ArbitragesTable = ({ data }: ArbitragesTableProps) => {
   return (
-    <TableContainer sx={{ maxHeight: 300, overflowY: 'auto' }}>
+    <TableContainer sx={{ maxHeight: TABLE_HEIGHT, overflowY: 'auto' }}>
       <Table aria-label="simple table" stickyHeader>
         <TableBody>
           {data.map((arbitrageDetails: ArbitrageDetails, index) => (

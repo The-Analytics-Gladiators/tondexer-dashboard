@@ -7,7 +7,12 @@ import { Chip } from '@mui/material';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Swap } from '../../api/types';
-import { formatJettonAmount, moneyFormatter } from '../Charts/utils.ts';
+import {
+  CHART_HEIGHT,
+  formatJettonAmount,
+  moneyFormatter,
+  TABLE_HEIGHT,
+} from '../Charts/utils.ts';
 import DexIcon from '../DexIcon';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -23,7 +28,7 @@ type SwapsTableProps = {
 
 const SwapsTable = ({ data }: SwapsTableProps) => {
   return (
-    <TableContainer sx={{ maxHeight: 300, overflowY: 'auto' }}>
+    <TableContainer sx={{ maxHeight: TABLE_HEIGHT, overflowY: 'auto' }}>
       <Table aria-label="simple table" stickyHeader>
         <TableBody>
           {data.map((swap: Swap, index) => (
@@ -33,9 +38,14 @@ const SwapsTable = ({ data }: SwapsTableProps) => {
             >
               <TableCell align="center" sx={{ p: 0 }}>
                 {dayjs(swap.time).fromNow()}
-                <ExternalLink url={`https://tonviewer.com/transaction/${swap.hashes[0]}`} />
+                <ExternalLink
+                  url={`https://tonviewer.com/transaction/${swap.hashes[0]}`}
+                />
               </TableCell>
-              <TableCell align="center" sx={{ display: 'flex', justifyContent: 'center' }}>
+              <TableCell
+                align="center"
+                sx={{ display: 'flex', justifyContent: 'center' }}
+              >
                 <DexIcon
                   altText={swap.dex}
                   sizePx={24}
@@ -45,31 +55,38 @@ const SwapsTable = ({ data }: SwapsTableProps) => {
                 ></DexIcon>
               </TableCell>
               <TableCell align="center" sx={{ p: 0 }}>
-                <Breadcrumbs separator="->" sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Tooltip
-                    title={`~${moneyFormatter.format(swap.inUsd)}`}
-                  >
+                <Breadcrumbs
+                  separator="->"
+                  sx={{ display: 'flex', justifyContent: 'center' }}
+                >
+                  <Tooltip title={`~${moneyFormatter.format(swap.inUsd)}`}>
                     <Chip
                       key={`${swap.time}-${swap.jettonInName}`}
                       label={
                         <>
                           <Typography fontSize={12}>
-                            {swap.jettonInSymbol} {formatJettonAmount(swap.amountIn, swap.jettonInDecimals)}
+                            {swap.jettonInSymbol}{' '}
+                            {formatJettonAmount(
+                              swap.amountIn,
+                              swap.jettonInDecimals
+                            )}
                           </Typography>
                         </>
                       }
                       variant="outlined"
                     />
                   </Tooltip>
-                  <Tooltip
-                    title={`~${moneyFormatter.format(swap.outUsd)}`}
-                  >
+                  <Tooltip title={`~${moneyFormatter.format(swap.outUsd)}`}>
                     <Chip
                       key={`${swap.time}-${swap.jettonOutName}`}
                       label={
                         <>
                           <Typography fontSize={12}>
-                            {swap.jettonOutSymbol} {formatJettonAmount(swap.amountOut, swap.jettonOutDecimals)}
+                            {swap.jettonOutSymbol}{' '}
+                            {formatJettonAmount(
+                              swap.amountOut,
+                              swap.jettonOutDecimals
+                            )}
                           </Typography>
                         </>
                       }

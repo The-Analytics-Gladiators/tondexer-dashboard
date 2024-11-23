@@ -20,15 +20,32 @@ import {
   fetchTopUsers,
   fetchTopSwaps,
 } from '../../api';
-import { emptySwapsDistribution, SummaryDto, Swap, SwapsDistribution, TopJetton, TopPool, TopUser, UserStatsDto, VolumeHistory } from '../../api/types';
+import {
+  emptySwapsDistribution,
+  SummaryDto,
+  Swap,
+  SwapsDistribution,
+  TopJetton,
+  TopPool,
+  TopUser,
+  UserStatsDto,
+  VolumeHistory,
+} from '../../api/types';
 import ChartCustomContainer from '../../components/ChartContainer';
 import SwapsTable from '../../components/SwapsTable';
 import SummaryDisplay from '../../components/Summary';
 import UserStatsTable from '../../components/UserStatsTable';
 import { Link } from 'react-router-dom';
-import { SwapDistributionBarEntry, swapsDistributionToDataArray } from '../../api/swaps';
+import {
+  SwapDistributionBarEntry,
+  swapsDistributionToDataArray,
+} from '../../api/swaps';
 import CustomTreemap from '../../components/Charts/Treemap';
-import { topJettonsToTreemapData, topPoolsToTreemapData, topUsersToTreemapData } from '../../components/Charts/Treemap/transformers';
+import {
+  topJettonsToTreemapData,
+  topPoolsToTreemapData,
+  topUsersToTreemapData,
+} from '../../components/Charts/Treemap/transformers';
 
 const MainPage = () => {
   const [volumeHistory, setVolumeHistory] = useState<VolumeHistory[]>([]);
@@ -46,9 +63,11 @@ const MainPage = () => {
   const [isSummaryLoading, setIsSummaryLoading] = useState<boolean>(true);
 
   const [isTopSwapsLoading, setIsTopSwapsLoading] = useState<boolean>(true);
-  const [topSwaps, setTopSwaps] = useState<Swap[]>([])
+  const [topSwaps, setTopSwaps] = useState<Swap[]>([]);
 
-  const [swapsDistribution, setSwapsDistribution] = useState<SwapsDistribution>(emptySwapsDistribution)
+  const [swapsDistribution, setSwapsDistribution] = useState<SwapsDistribution>(
+    emptySwapsDistribution
+  );
 
   const [topReferrers, setTopReferrers] = useState<UserStatsDto[]>([]);
   const [isTopReferrersLoading, setIsTopReferrersLoading] =
@@ -114,9 +133,10 @@ const MainPage = () => {
         fill: '#413ea0',
         yAxisId: 'left',
         display: 'volumeFormatted',
-      }
-    ], []
-  )
+      },
+    ],
+    []
+  );
 
   useEffect(() => {
     setIsSwapsLatestLoading(true);
@@ -141,20 +161,20 @@ const MainPage = () => {
     fetchTopSwaps(selectedDataPeriod, selectedDex).then((data) => {
       setTopSwaps(data);
       setIsTopSwapsLoading(false);
-    })
+    });
     fetchSwapsDistribution(selectedDataPeriod, selectedDex).then((data) => {
       setSwapsDistribution(data);
-    })
+    });
     fetchTopReferrers(selectedDataPeriod, selectedDex).then(({ data }) => {
       setTopReferrers(data);
       setIsTopReferrersLoading(false);
     });
     fetchTopPools(selectedDataPeriod, selectedDex).then((data) => {
-      setTopPools(data)
+      setTopPools(data);
       setIsTopPoolsLoading(false);
     });
     fetchTopJettons(selectedDataPeriod, selectedDex).then((data) => {
-      setTopJettons(data)
+      setTopJettons(data);
       setIsTopJettonsLoading(false);
     });
     fetchTopUsers(selectedDataPeriod, selectedDex).then((data) => {
@@ -231,6 +251,9 @@ const MainPage = () => {
           size={{ lg: 7 }}
           isLoading={false}
         >
+          <Typography marginBottom="10px" variant="h6">
+            Volume and transactions
+          </Typography>
           <ComposedBarLineChart<VolumeHistory>
             data={volumeHistory}
             bars={composedChartBarsConfig}
@@ -245,23 +268,31 @@ const MainPage = () => {
           isLoading={isSwapsLatestLoading}
         >
           {/* Latest Transactions */}
+          <Typography marginBottom="10px" variant="h6">
+            Latest Transactions
+          </Typography>
           <SwapsTable data={swapsLatest} />
         </ChartCustomContainer>
-        <ChartCustomContainer 
+        <ChartCustomContainer
           isLoading={isTopSwapsLoading}
           sx={{ minHeight: '300px' }}
           size={{ lg: 5 }}
-          >
-          {/* Latest Transactions */}
+        >
+          <Typography marginBottom="10px" variant="h6">
+            Top Transactions
+          </Typography>
           <SwapsTable data={topSwaps} />
         </ChartCustomContainer>
-        <ChartCustomContainer 
+        <ChartCustomContainer
           sx={{ minHeight: '300px' }}
           size={{ lg: 3 }}
           isLoading={false}
         >
           {/* Transaction's Distribution */}
           {/* A chart that displays how transaction volumes are distributed across different ranges, giving insight into the size of typical trades. */}
+          <Typography marginBottom="10px" variant="h6">
+            Transaction's Distribution
+          </Typography>
           <ComposedBarLineChart<SwapDistributionBarEntry>
             data={swapsDistributionToDataArray(swapsDistribution)}
             bars={swapsDistributionChartBarConfig}
@@ -270,25 +301,46 @@ const MainPage = () => {
             legend={false}
           />
         </ChartCustomContainer>
-        <ChartCustomContainer 
+        <ChartCustomContainer
           size={{ lg: 4 }}
           isLoading={isTopReferrersLoading}
         >
           {/* Top Fee Earners */}
           {/* Users or wallets that have earned the most in fees by referring or facilitating trades on the DEX */}
+          <Typography marginBottom="10px" variant="h6">
+            Top Fee Earners
+          </Typography>
           <UserStatsTable data={topReferrers} />
         </ChartCustomContainer>
-        <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopPoolsLoading}>
+        <ChartCustomContainer
+          size={{ xs: 12, lg: 4 }}
+          isLoading={isTopPoolsLoading}
+        >
           {/* Trending Liquidity Pools */}
-          <CustomTreemap data={topPoolsToTreemapData(topPools)}/>
+          <Typography marginBottom="10px" variant="h6">
+            Trending Liquidity Pools
+          </Typography>
+          <CustomTreemap data={topPoolsToTreemapData(topPools)} />
         </ChartCustomContainer>
-          {/* Trending Tokens */}
-        <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopJettonsLoading}>
-          <CustomTreemap data={topJettonsToTreemapData(topJettons)}/>
+        {/* Trending Tokens */}
+        <ChartCustomContainer
+          size={{ xs: 12, lg: 4 }}
+          isLoading={isTopJettonsLoading}
+        >
+          <Typography marginBottom="10px" variant="h6">
+            Trending Tokens
+          </Typography>
+          <CustomTreemap data={topJettonsToTreemapData(topJettons)} />
         </ChartCustomContainer>
-        <ChartCustomContainer size={{ xs: 12, lg: 4 }} isLoading={isTopUsersLoading}>
+        <ChartCustomContainer
+          size={{ xs: 12, lg: 4 }}
+          isLoading={isTopUsersLoading}
+        >
+          <Typography marginBottom="10px" variant="h6">
+            Top Swappers by Volume
+          </Typography>
           {/* Top Swappers by Volume */}
-          <CustomTreemap data={topUsersToTreemapData(topUsers)}/>
+          <CustomTreemap data={topUsersToTreemapData(topUsers)} />
         </ChartCustomContainer>
       </Grid>
     </Box>

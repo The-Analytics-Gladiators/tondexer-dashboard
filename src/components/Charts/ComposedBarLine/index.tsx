@@ -11,7 +11,12 @@ import {
 } from 'recharts';
 import { Props as BarComponentProps } from 'recharts/types/cartesian/Bar';
 import { Props as LineComponentProps } from 'recharts/types/cartesian/Line';
-import { countFormatter, isMoneyField, moneyFormatter } from '../utils.ts';
+import {
+  CHART_HEIGHT,
+  countFormatter,
+  isMoneyField,
+  moneyFormatter,
+} from '../utils.ts';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
 
@@ -80,7 +85,7 @@ const ComposedBarLineChart = <T,>({
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart
         width={500}
-        height={400}
+        height={CHART_HEIGHT}
         data={data}
         margin={{
           top: 20,
@@ -92,7 +97,7 @@ const ComposedBarLineChart = <T,>({
         <XAxis dataKey={xAxisDataKey} fontSize={10} />
         <YAxis yAxisId="left" />
         <YAxis yAxisId="right" orientation="right" />
-        {(legend) && <Legend />}
+        {legend && <Legend />}
         {...renderedBars}
         {...renderedLines}
         <Tooltip content={CustomTooltip} />
