@@ -1,7 +1,8 @@
 # Tondexer
 
 Web UI: [tondexer.gladiators.dev](https://tondexer.gladiators.dev)
-Check the Back End part of the project here: [Tondexer Front End Repository](https://github.com/The-Analytics-Gladiators/tondexer)
+
+Check the Back End part of the project here: [Tondexer Back End Repository](https://github.com/The-Analytics-Gladiators/tondexer)
 
 ![Tondexer Logo](https://raw.github.com/the-analytics-gladiators/tondexer/main/logos/tondexer-logo.jpg)
 
