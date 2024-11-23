@@ -28,7 +28,7 @@ const SummaryDisplay = ({ summary }: SummaryProps) => {
           <Typography variant="h2">
             {countFormatter().format(summary.unique_tokens)}
           </Typography>
-          <Typography variant="subtitle1">Unique Tokens</Typography>
+          <Typography variant="subtitle1">Unique Jettons</Typography>
         </Grid>
         <Grid>
           <Typography variant="h2">

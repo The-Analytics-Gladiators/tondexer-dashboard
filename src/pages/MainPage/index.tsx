@@ -325,7 +325,7 @@ const MainPage = () => {
         <ChartCustomContainer
           size={{ xs: 12, lg: 4 }}
           isLoading={isTopJettonsLoading}
-          title="Trending Tokens"
+          title="Trending Jettons"
         >
           <CustomTreemap data={topJettonsToTreemapData(topJettons)} />
         </ChartCustomContainer>

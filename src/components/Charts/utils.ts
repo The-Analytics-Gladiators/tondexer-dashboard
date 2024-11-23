@@ -11,7 +11,7 @@ const MONEY_FIELDS = new Set([
 export const CHART_HEIGHT = 240;
 export const TABLE_HEIGHT = CHART_HEIGHT;
 
-export const REFRESH_INTERVAL_MS = 5000;
+export const REFRESH_INTERVAL_MS = 15000;
 
 export const moneyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',

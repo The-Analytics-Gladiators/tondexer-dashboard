@@ -275,7 +275,7 @@ const ArbitragePage = () => {
         <ChartCustomContainer
           size={{ lg: 6 }}
           isLoading={false}
-          title="Top Tokens for Arbitrage"
+          title="Top Jettons for Arbitrage"
         >
           <ComposedBarLineChart<ArbitrageJetton>
             data={arbitrageJettons}
