@@ -37,21 +37,26 @@ const ArbitragesTable = ({ data }: ArbitragesTableProps) => {
               <TableCell align="center" sx={{ p: 0 }}>
                 {arbitrageDetails.dexes.map((dex, dexIndex) => {
                   return (
-                      <DexIcon
-                        altText={dex}
-                        sizePx={24}
-                        dex={dex}
-                        key={`dexicon-${dex}`}
-                        url={`https://tonviewer.com/transaction/${arbitrageDetails.traces[dexIndex]}`}
-                      ></DexIcon>
+                    <DexIcon
+                      altText={dex}
+                      sizePx={24}
+                      dex={dex}
+                      key={`dexicon-${dex}-${dexIndex}`}
+                      url={`https://tonviewer.com/transaction/${arbitrageDetails.traces[dexIndex]}`}
+                    ></DexIcon>
                   );
                 })}
               </TableCell>
               <TableCell align="center" sx={{ p: 0 }}>
-                <Breadcrumbs separator="->" sx={{ display: 'flex', justifyContent: 'center' }} maxItems={3}>
+                <Breadcrumbs
+                  separator="->"
+                  sx={{ display: 'flex', justifyContent: 'center' }}
+                  maxItems={3}
+                >
                   {arbitrageDetails.jettonSymbols.map(
                     (jettonSymbol, jettonsIndex) => (
                       <Tooltip
+                        key={`tooltip-${arbitrageDetails.time}-${jettonSymbol}-${jettonsIndex}`}
                         title={`~${moneyFormatter.format(arbitrageDetails.amountsUsdPath[jettonsIndex])}`}
                       >
                         <Chip
@@ -63,7 +68,8 @@ const ArbitragesTable = ({ data }: ArbitragesTableProps) => {
                               </Typography>
                               <Typography fontSize={10}>
                                 {formatJettonAmount(
-                                  arbitrageDetails.amountsPath[jettonsIndex], arbitrageDetails.jettonsDecimals[jettonsIndex]
+                                  arbitrageDetails.amountsPath[jettonsIndex],
+                                  arbitrageDetails.jettonsDecimals[jettonsIndex]
                                 )}
                               </Typography>
                             </>
@@ -77,7 +83,9 @@ const ArbitragesTable = ({ data }: ArbitragesTableProps) => {
                 </Breadcrumbs>
               </TableCell>
               <TableCell align="center" sx={{ p: 0 }}>
-                <Tooltip title={`${moneyFormatter.format(arbitrageDetails.usdProfit)}`}>
+                <Tooltip
+                  title={`${moneyFormatter.format(arbitrageDetails.usdProfit)}`}
+                >
                   <Chip
                     label={`${arbitrageDetails.jettonSymbol} ${formatJettonAmount(arbitrageDetails.amountOut - arbitrageDetails.amountIn, arbitrageDetails.jettonDecimals)}`}
                     key={`profit_${arbitrageDetails.time}_${arbitrageDetails.usdProfit}`}

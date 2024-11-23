@@ -15,7 +15,7 @@ const App = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', height: '100dvh', width: '100dvw' }}>
+      <Box sx={{ display: 'flex', minHeight: '100dvh', width: '100dvw' }}>
         <Router>
           <AppRouter />
         </Router>
