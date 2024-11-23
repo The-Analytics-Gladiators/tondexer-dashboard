@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Swap } from '../../api/types';
 import {
-  CHART_HEIGHT,
   formatJettonAmount,
   moneyFormatter,
   TABLE_HEIGHT,
