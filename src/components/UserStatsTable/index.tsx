@@ -6,7 +6,7 @@ import TableBody from '@mui/material/TableBody';
 import { Chip } from '@mui/material';
 import { moneyFormatter, TABLE_HEIGHT } from '../Charts/utils.ts';
 import { UserStatsDto } from '../../api/types';
-import { shortenHash } from '../../api/transformers/index.ts';
+import { shortenHash } from '../../api/transformers';
 
 type NewSwapsTableProps = {
   data: UserStatsDto[];
@@ -22,7 +22,7 @@ const UserStatsTable = ({ data }: NewSwapsTableProps) => {
               key={`${swap.user_address}${index}`}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell align="center" sx={{ p: 0 }}>
+              <TableCell align="center" sx={{ p: 1 }}>
                 <Chip
                   label={moneyFormatter.format(swap.amount_usd)}
                   size="small"

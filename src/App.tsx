@@ -14,7 +14,7 @@ const darkTheme = createTheme({
 const App = () => {
   return (
     <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
+      <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex', minHeight: '100dvh', width: '100dvw' }}>
         <Router>
           <AppRouter />

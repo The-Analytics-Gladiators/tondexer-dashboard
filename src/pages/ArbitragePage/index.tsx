@@ -32,12 +32,13 @@ import ComposedBarLineChart from '../../components/Charts/ComposedBarLine';
 import ChartCustomContainer from '../../components/ChartContainer';
 import ArbitragesTable from '../../components/ArbitragesTable';
 import { Link } from 'react-router-dom';
+import { REFRESH_INTERVAL_MS } from '../../components/Charts/utils.ts';
+import { CircularProgress } from '@mui/material';
 
 const ArbitragePage = () => {
   const [selectedDataPeriod, setSelectedDataPeriod] = useState<DATA_PERIOD>(
     DATA_PERIOD.DAY
   );
-
   const [latestArbitrages, setLatestArbitrages] = useState<ArbitrageDetails[]>(
     []
   );
@@ -48,23 +49,22 @@ const ArbitragePage = () => {
   >([]);
   const [isArbVolumeHistoryLoading, setIsArbVolumeHistoryLoading] =
     useState<boolean>(true);
-
   const [isTopArbitragesLoading, setIsTopArbitragesLoading] =
     useState<boolean>(true);
   const [topArbitrages, setTopArbitrages] = useState<ArbitrageDetails[]>([]);
-
   const [arbitrageJettons, setArbitrageJettons] = useState<ArbitrageJetton[]>(
     []
   );
-
+  const [refreshCount, setRefreshCount] = useState<number>(0);
   const [isTopArbitrageUsersLoading, setIsTopArbitrageUsersLoading] =
     useState<boolean>(true);
   const [topArbitrageUsers, setTopArbitrageUsers] = useState<UserStatsDto[]>(
     []
   );
-
   const [arbitragesDistribution, setArbitragesDistribution] =
     useState<ArbitragesDistribution>(emptyArbitragesDistibution);
+  const [isReloadInProgress, setIsReloadInProgress] = useState(false);
+
   const arbitragesDistributionChartBarConfig: BarComponentProps[] = useMemo(
     () => [
       {
@@ -135,15 +135,29 @@ const ArbitragePage = () => {
   );
 
   useEffect(() => {
-    setIsArbVolumeHistoryLoading(true);
-    setIsLatestArbitragesLoading(true);
-    setIsTopArbitragesLoading(true);
-    setIsTopArbitragesLoading(true);
-    setIsTopArbitrageUsersLoading(true);
+    const interval = setInterval(() => {
+      setRefreshCount((prevCount) => prevCount + 1);
+    }, REFRESH_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (refreshCount < 1) {
+      setIsArbVolumeHistoryLoading(true);
+      setIsLatestArbitragesLoading(true);
+      setIsTopArbitragesLoading(true);
+      setIsTopArbitragesLoading(true);
+      setIsTopArbitrageUsersLoading(true);
+    } else {
+      setIsReloadInProgress(true);
+    }
+
     fetchArbitrageVolumeHistory(selectedDataPeriod)
       .then((data) => {
         setArbVolumeHistory(data);
         setIsArbVolumeHistoryLoading(false);
+        setIsReloadInProgress(false);
       })
       .catch(() => {
         setIsArbVolumeHistoryLoading(false);
@@ -170,7 +184,7 @@ const ArbitragePage = () => {
       setTopArbitrageUsers(data);
       setIsTopArbitrageUsersLoading(false);
     });
-  }, [selectedDataPeriod]);
+  }, [selectedDataPeriod, refreshCount]);
 
   return (
     <Box sx={{ p: 5, width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
@@ -192,18 +206,22 @@ const ArbitragePage = () => {
             Arbitrages Overview
           </Typography>
         </Grid>
-
-        <ToggleButtonGroup
-          color="primary"
-          value={selectedDataPeriod}
-          exclusive
-          onChange={(_, value: DATA_PERIOD) => setSelectedDataPeriod(value)}
-          aria-label="Platform"
-        >
-          <ToggleButton value={DATA_PERIOD.DAY}>Day</ToggleButton>
-          <ToggleButton value={DATA_PERIOD.WEEK}>Week</ToggleButton>
-          <ToggleButton value={DATA_PERIOD.MONTH}>Month</ToggleButton>
-        </ToggleButtonGroup>
+        <Grid container direction="row">
+          {isReloadInProgress && (
+            <CircularProgress sx={{ marginRight: '30px' }} color="primary" />
+          )}
+          <ToggleButtonGroup
+            color="primary"
+            value={selectedDataPeriod}
+            exclusive
+            onChange={(_, value: DATA_PERIOD) => setSelectedDataPeriod(value)}
+            aria-label="Platform"
+          >
+            <ToggleButton value={DATA_PERIOD.DAY}>Day</ToggleButton>
+            <ToggleButton value={DATA_PERIOD.WEEK}>Week</ToggleButton>
+            <ToggleButton value={DATA_PERIOD.MONTH}>Month</ToggleButton>
+          </ToggleButtonGroup>
+        </Grid>
       </Grid>
       <Grid
         container
@@ -216,12 +234,9 @@ const ArbitragePage = () => {
         }}
       >
         <ChartCustomContainer
-          sx={{ minHeight: '350px' }}
           isLoading={isArbVolumeHistoryLoading}
+          title="Arbitrage Volume & Transactions"
         >
-          <Typography marginBottom="10px" variant="h6">
-            Arbitrage Volume & Transactions
-          </Typography>
           <ComposedBarLineChart<ArbitrageVolumeHistory>
             data={arbVolumeHistory}
             bars={composedChartBarsConfig}
@@ -230,33 +245,25 @@ const ArbitragePage = () => {
             legend={true}
           />
         </ChartCustomContainer>
-        <ChartCustomContainer isLoading={isLatestArbitragesLoading}>
-          {/* Latest Arbitrage Opportunities */}
-          <Typography marginBottom="10px" variant="h6">
-            Latest Arbitrage Opportunities
-          </Typography>
+        <ChartCustomContainer
+          title="Latest Arbitrage Opportunities"
+          isLoading={isLatestArbitragesLoading}
+        >
           <ArbitragesTable data={latestArbitrages} />
         </ChartCustomContainer>
         <ChartCustomContainer
           isLoading={isTopArbitragesLoading}
           size={{ lg: 6 }}
+          title="Top Arbitrage Profits"
         >
-          {/* Top Arbitrage Profits */}
-          <Typography marginBottom="10px" variant="h6">
-            Top Arbitrage Profits
-          </Typography>
           <ArbitragesTable data={topArbitrages} />
         </ChartCustomContainer>
         <ChartCustomContainer
-          sx={{ minHeight: '300px' }}
           size={{ lg: 6 }}
           isLoading={false}
+          title="Profit Distribution for Arbitrage Trades"
+          description="A chart showing how arbitrage profits are distributed across different ranges, providing insights into the profitability of trades."
         >
-          {/* Profit Distribution for Arbitrage Trades */}
-          {/* A chart showing how arbitrage profits are distributed across different ranges, providing insights into the profitability of trades. */}
-          <Typography marginBottom="10px" variant="h6">
-            Profit Distribution for Arbitrage Trades
-          </Typography>
           <ComposedBarLineChart<SwapDistributionBarEntry>
             data={arbitragesDistributionToDataArray(arbitragesDistribution)}
             bars={arbitragesDistributionChartBarConfig}
@@ -266,14 +273,10 @@ const ArbitragePage = () => {
           />
         </ChartCustomContainer>
         <ChartCustomContainer
-          sx={{ minHeight: '400px' }}
           size={{ lg: 6 }}
           isLoading={false}
+          title="Top Tokens for Arbitrage"
         >
-          {/* Top Tokens for Arbitrage */}
-          <Typography marginBottom="10px" variant="h6">
-            Top Tokens for Arbitrage
-          </Typography>
           <ComposedBarLineChart<ArbitrageJetton>
             data={arbitrageJettons}
             bars={composedChartJettonsBarsConfig}
@@ -285,11 +288,8 @@ const ArbitragePage = () => {
         <ChartCustomContainer
           size={{ lg: 6 }}
           isLoading={isTopArbitrageUsersLoading}
+          title="Leading Arbitrage Traders"
         >
-          {/* Leading Arbitrage Traders */}
-          <Typography marginBottom="10px" variant="h6">
-            Leading Arbitrage Traders
-          </Typography>
           <UserStatsTable data={topArbitrageUsers} />
         </ChartCustomContainer>
       </Grid>

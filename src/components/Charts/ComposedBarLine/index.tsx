@@ -65,6 +65,16 @@ const CustomTooltip = ({
   return null;
 };
 
+const tickFormatterShort = (tickValue: number) => {
+  if (tickValue >= 1_000_000) {
+    return `${(tickValue / 1_000_000).toFixed(1)}m`;
+  } else if (tickValue >= 1_000) {
+    return `${(tickValue / 1_000).toFixed(1)}k`;
+  } else {
+    return tickValue.toString();
+  }
+};
+
 const ComposedBarLineChart = <T,>({
   data,
   bars,
@@ -82,7 +92,7 @@ const ComposedBarLineChart = <T,>({
   });
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="90%">
       <ComposedChart
         width={500}
         height={CHART_HEIGHT}
@@ -94,9 +104,18 @@ const ComposedBarLineChart = <T,>({
           left: 20,
         }}
       >
-        <XAxis dataKey={xAxisDataKey} fontSize={10} />
-        <YAxis yAxisId="left" />
-        <YAxis yAxisId="right" orientation="right" />
+        <XAxis dataKey={xAxisDataKey} fontSize={12} />
+        <YAxis
+          yAxisId="left"
+          tickFormatter={tickFormatterShort}
+          fontSize={12}
+        />
+        <YAxis
+          yAxisId="right"
+          fontSize={12}
+          tickFormatter={tickFormatterShort}
+          orientation="right"
+        />
         {legend && <Legend />}
         {...renderedBars}
         {...renderedLines}

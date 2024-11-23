@@ -1,17 +1,16 @@
-import { Divider, Grid2 as Grid, Typography } from "@mui/material";
-import { TooltipProps, Treemap, Tooltip } from "recharts"
-import { TreemapNode } from "recharts/types/util/types";
-import { moneyFormatter } from "../utils";
-import DexIcon from "../../DexIcon";
-
+import { Divider, Grid2 as Grid, Typography } from '@mui/material';
+import { TooltipProps, Treemap, Tooltip, ResponsiveContainer } from 'recharts';
+import { TreemapNode } from 'recharts/types/util/types';
+import { CHART_HEIGHT, moneyFormatter } from '../utils';
+import DexIcon from '../../DexIcon';
 
 export type TreemapData = {
-  name: string,
-  url: string,
-  usd: number,
-  dex?: string,
-  size: number,
-}
+  name: string;
+  url: string;
+  usd: number;
+  dex?: string;
+  size: number;
+};
 
 const CustomTooltip = ({
   active,
@@ -30,21 +29,29 @@ const CustomTooltip = ({
       >
         <Typography variant="subtitle1">{`${label}`}</Typography>
         <Divider />
-        {payload.map((payloadItem) => {
+        {payload.map((payloadItem, ind) => {
           return (
-		   <Grid container direction="column" spacing={2}>
-		     <Grid>
-               <Typography variant="subtitle2" key={payloadItem.dataKey}>
-			    {payloadItem.payload.dex && <DexIcon
-                  altText={payloadItem.payload.dex}
-                  sizePx={24}
-                  dex={payloadItem.payload.dex}
-                  key={`dexicon-${payloadItem.payload.dex}`}
-                ></DexIcon>}
-                 <span style={{ fontWeight: 'bold' }}>{payloadItem.payload.name}</span>: {moneyFormatter.format(payloadItem.payload.usd)}
-               </Typography>
- 			</Grid>
-		   </Grid>
+            <Grid
+              key={`${payloadItem.color}_${payloadItem.name}_${ind}`}
+              container
+              direction="column"
+              spacing={2}
+            >
+              <Typography variant="subtitle2" key={payloadItem.dataKey}>
+                {payloadItem.payload.dex && (
+                  <DexIcon
+                    altText={payloadItem.payload.dex}
+                    sizePx={24}
+                    dex={payloadItem.payload.dex}
+                    key={`dexicon-${payloadItem.payload.dex}`}
+                  ></DexIcon>
+                )}
+                <span style={{ fontWeight: 'bold' }}>
+                  {payloadItem.payload.name}
+                </span>
+                : {moneyFormatter.format(payloadItem.payload.usd)}
+              </Typography>
+            </Grid>
           );
         })}
       </div>
@@ -63,58 +70,84 @@ interface NodeProps extends TreemapNode {
   index: number;
 }
 
-const colors: string[] = ['#66dcfb', '#58a3e4', '#8478e3', '#4d9cb0', '#68e1ff', '#ad76e3', '#8478e4', '#353548', '#59a5e4', '#7f88e3'];
+const colors: string[] = [
+  '#7b1fa2',
+  '#01579b',
+  '#cc9900',
+  '#01579b',
+  '#004c8c',
+  '#4a148c',
+  '#1a237e',
+  '#004c8c',
+  '#4a148c',
+  '#1a237e',
+];
 
 const CustomContent = (props: NodeProps & TreemapData) => {
-	let x = props.x
-	let y = props.y
-	let width = props.width
-	let height = props.height
+  const x = props.x;
+  const y = props.y;
+  const width = props.width;
+  const height = props.height;
 
-	//Where is the ****ing center of the rectangle?) Nick :)
-  return <a href={props.url} target="_blank" rel="noopener noreferrer">
-    <g href={props.url}>
-      <rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-		fill={colors[props.index % colors.length]}
-        stroke="#fff"
-      />
-      <text
-	    fontFamily="Lucida Grande, Lucida Sans Unicode, Arial, Helvetica, sans-serif" // Why not? :D Nick!...
-        x={x + 10 }
-        y={y + height / 2}
-        style={props.textStyle}
-        visibility={'visible'}
-      >
-	  {props.name}
-      </text>
-    </g>
-  </a>
-}
+  return (
+    <a href={props.url} target="_blank" rel="noopener noreferrer">
+      <g href={props.url}>
+        <rect
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          fill={colors[props.index % colors.length]}
+          stroke="#616161"
+        />
+        <text
+          fontFamily="Roboto, Helvetica, sans-serif" // Why not? :D Nick!...
+          x={x + 10}
+          y={y + height / 2}
+          style={{ fontWeight: 'bold', fontSize: 12 }}
+          visibility={'visible'}
+        >
+          {props.name}
+        </text>
+      </g>
+    </a>
+  );
+};
 
 type TreemapProps = {
-  data: TreemapData[]
-}
+  data: TreemapData[];
+};
 
 const CustomTreemap = ({ data }: TreemapProps) => {
+  return (
+    <ResponsiveContainer width="100%" height="80%">
+      <Treemap
+        width={300}
+        height={CHART_HEIGHT}
+        data={data}
+        dataKey="size"
+        fill="#fff"
+        content={
+          <CustomContent
+            x={0}
+            y={0}
+            width={0}
+            height={0}
+            depth={0}
+            index={0}
+            name={''}
+            url={''}
+            dex={''}
+            usd={0}
+            value={0}
+            size={0}
+          />
+        }
+      >
+        <Tooltip content={CustomTooltip} />
+      </Treemap>
+    </ResponsiveContainer>
+  );
+};
 
-  return <Treemap
-  width={480}
-  height={250}
-  data={data}
-  dataKey="size"
-  // aspectRatio={4 / 3}
-  stroke="#fff"
-  fill="#8884d8"
-  content={<CustomContent x={0} y={0} width={0} height={0} depth={0} index={0} name={""} url={""} dex={""} usd={0} value={0} size={0} />} // Mr Gattuso, please help!
->
-<Tooltip content={CustomTooltip} />
-</Treemap>
-
-}
-
-
-export default CustomTreemap
+export default CustomTreemap;
